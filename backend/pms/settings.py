@@ -58,11 +58,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'pms.urls'
+        # 'DIRS': [os.path.join(BASE_DIR,'build')],
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'build')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
