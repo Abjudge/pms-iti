@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+from datetime import timedelta
 
 from pathlib import Path
 import os
@@ -58,11 +59,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'pms.urls'
+        # 'DIRS': [os.path.join(BASE_DIR,'build')],
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'build')],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -147,7 +149,10 @@ REST_FRAMEWORK={
     }
 SIMPLE_JWT={
     'AUTH_HEADER_TYPES':('JWT',),
+
+
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=600),
+
 
     }
 
