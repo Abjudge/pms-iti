@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('projects/',include('project.urls')),
     # path('workspace/',include('workspace.urls')),
-    # path('task/',include('task.urls')),
+    path('task/',include('task.urls')),
     path('meeting/',include('meeting.urls')),
 
 ]

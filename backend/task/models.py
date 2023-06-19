@@ -44,9 +44,10 @@ class Information_request(models.Model):
         ('c', 'Closed')
     )
     information_massage=models.CharField(max_length=250)
+    creator_id = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE ,related_name='creator')
     task_id = models.ForeignKey('task.Task', on_delete=models.CASCADE)
-    user_id = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE)
-    information_answer=models.CharField(max_length=250)
-    status =models.CharField(max_length=1,choices=information_status)   
+    receiver_id = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE ,related_name='user')
+    information_answer=models.CharField(max_length=250,blank=True)
+    status =models.CharField(max_length=1,choices=information_status ,default='o')   
     def __str__(self):
         return self.information_massage
