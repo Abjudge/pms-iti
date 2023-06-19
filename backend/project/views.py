@@ -2,7 +2,7 @@
 from rest_framework.response import Response
 from  rest_framework.decorators import  api_view
 from .models import *
-from .serliazers import *
+from .serializers import *
 from rest_framework.status import *
 from django.shortcuts import  get_object_or_404
 # from rest_framework.permissions import  IsAdminUser,IsAuthenticated,IsAuthenticatedOrReadOnly
@@ -32,9 +32,9 @@ def AddProject(request):
 
     if(item.is_valid()):
         item.save()
-        return  Response(HTTP_200_OK)
+        return  Response(status=HTTP_200_OK)
     else:
-        return  Response(HTTP_417_EXPECTATION_FAILED)
+        return  Response(status=HTTP_417_EXPECTATION_FAILED)
 
 
 # @api_view(['GET'])
@@ -57,7 +57,7 @@ def ListProject(request,id=None):
     else:
         data=Project.objects.all()
         dataserlized=Projectselizer(data,many=True)
-        return Response(status=HTTP_207_MULTI_STATUS,data={'data':dataserlized.data       })
+        return Response(status=HTTP_207_MULTI_STATUS,data={'data':dataserlized.data})
 
 
 
