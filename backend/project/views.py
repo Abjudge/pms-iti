@@ -29,23 +29,13 @@ def UpdateProject(request,id):
 def AddProject(request):
     #Project.objects.create(name=request.data['name'])
     item=Projectselizer(data=request.data)
-
+    
     if(item.is_valid()):
         item.save()
-        return  Response(status=HTTP_200_OK)
+        return  Response(status=HTTP_200_OK ,data=item.data)
     else:
         return  Response(status=HTTP_417_EXPECTATION_FAILED)
 
-
-# @api_view(['GET'])
-# def overview(request):
-#     print(type(request))
-#     api_endpoint={
-#         'overview':'/',
-#         'AllProject':'/AllCatagory & get method',
-#         'AddCatagoty':'/AddCatagory & post method'
-#     }
-#     return  Response(api_endpoint)
 
 @api_view(['GET'])
 def ListProject(request,id=None):

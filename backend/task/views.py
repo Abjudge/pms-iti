@@ -8,17 +8,23 @@ from django.shortcuts import  get_object_or_404
 from rest_framework.status import *
 from django.db.models import Q
 
-# @api_view(['GET'])
-# def Tasklist(request,id=None):
-#     if id:
-#         task = Task.objects.filter(id=id)
-#         serializer = TaskSerializer(task,many=True)
-#         return Response(serializer.data)
-#     else:    
-#         user_id= request.user.id
-#         Task.objects.filter(Q(developer_id=user_id) | Q(tester_id=user_id) | Q(owner_id=user_id))
-#         serializer = TaskSerializer(task,many=True)
-#         return Response(serializer.data)
+@api_view(['GET'])
+def Tasklist(request,id=None,status=None,project_id=None):
+    if project_id:
+        task = Task.objects.filter(project_id=project_id)
+        serializer = TaskSerializer(task,many=True)
+        return Response(serializer.data)
+    else:
+        user_id= request.user.id
+        if id:
+            task = Task.objects.filter(id=id)
+            serializer = TaskSerializer(task,many=True)
+            return Response(serializer.data)
+        else:    
+            user_id= request.user.id
+            Task.objects.filter(Q(developer_id=user_id) | Q(tester_id=user_id) | Q(owner_id=user_id))
+            serializer = TaskSerializer(task,many=True)
+            return Response(serializer.data)
 
 
 # @api_view(['POST'])
@@ -58,7 +64,7 @@ def Informationlist(request,id=None,status=None,task_id=None):
 @api_view(['POST'])
 def InformationCreate(request,task_id):
     user_id= request.user.id
-
+    
     request.data['creator_id']=user_id
     request.data['task_id']=task_id
     request.data['status']='o'
