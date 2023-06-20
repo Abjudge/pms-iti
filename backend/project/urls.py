@@ -6,5 +6,5 @@ urlpatterns = [
     path('Add',AddProject),
     path('Delete/<int:id>',DeleteProject),
     path('Update/<int:id>',UpdateProject),
-
+    
 ]

@@ -81,7 +81,7 @@ def AddWorkspace(request):
     print(item.errors)
     if(item.is_valid()):
         item.save()
-        return  Response(status=HTTP_200_OK)
+        return  Response(status=HTTP_200_OK,    )
     else:
         return  Response(status=HTTP_417_EXPECTATION_FAILED)
 
@@ -98,6 +98,4 @@ def ListWorkspace(request,id=None):
         data=Workspace.objects.all()
         dataserlized=Workspaceserializer(data,many=True)
         return Response(status=HTTP_207_MULTI_STATUS,data={'data':dataserlized.data})
-
-
 
