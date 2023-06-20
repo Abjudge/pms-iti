@@ -8,7 +8,6 @@ from accounts.models import UserAccount
 # Create your models here.
 class Task (models.Model):
     task_status = (
-        ('n', 'New'),
         ('t', 'TO Do'),
         ('p', 'In Progress'),
         ('t', 'Testing'),
@@ -22,12 +21,12 @@ class Task (models.Model):
     end_date = models.DateTimeField()
     estimated_duration = models.FloatField()
     actual_end_date = models.DateTimeField()
-    status =models.CharField(max_length=1,choices=task_status)
+    status =models.CharField(max_length=1,choices=task_status,default='t')
     project_id = models.ForeignKey('project.Project', on_delete=models.CASCADE)
     developer_id = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE ,related_name='developer')
     tester_id = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE,related_name='tester')
     owner_id = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE,related_name='owner')
-    attachment = models.FileField(upload_to='files/')
+    attachment = models.FileField(upload_to='files/',blank=True,null=True)
     def __str__(self):
         return self.name
     

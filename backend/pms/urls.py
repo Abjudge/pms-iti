@@ -19,7 +19,7 @@ urlpatterns = [
 
     path('projects/',include('project.urls')),
     path('workspaces/',include('workspace.urls')),
-    # path('workspace/',include('workspace.urls')),
+    
     path('task/',include('task.urls')),
     path('meeting/',include('meeting.urls')),
 
