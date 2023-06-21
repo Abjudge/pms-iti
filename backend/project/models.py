@@ -7,5 +7,7 @@ class Project(models.Model):
     start_date=models.DateTimeField()
     end_date=models.DateTimeField()
     workspace_id = models.ForeignKey('workspace.Workspace', on_delete=models.CASCADE)
+    clone_url=models.CharField(max_length=250,blank=True)
+    repo_name=models.CharField(max_length=250,blank=True)
     def __str__(self):
         return self.name

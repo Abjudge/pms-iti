@@ -8,14 +8,16 @@ from django.shortcuts import  get_object_or_404
 # from rest_framework.permissions import  IsAdminUser,IsAuthenticated,IsAuthenticatedOrReadOnly
 # from rest_framework import permissions,authentication
 # from rest_framework.decorators import permission_classes
+from . import github
 @api_view(['DELETE'])
 def DeleteProject(req,id):
     data=get_object_or_404(Project,id=id)
     data.delete()
     return Response(status=HTTP_200_OK)
 
-@api_view(['PUT'])
 
+
+@api_view(['PUT'])
 def UpdateProject(request,id):
     updateobject=get_object_or_404(Project,id=id)
         #Project1ser.
@@ -28,6 +30,10 @@ def UpdateProject(request,id):
 @api_view(['POST'])
 def AddProject(request):
     #Project.objects.create(name=request.data['name'])
+    
+    repo=github.create_repo(request.data['name'])
+    request.data['clone_url']=repo[0]
+    request.data['repe_name']=repo[1]
     item=Projectselizer(data=request.data)
     
     if(item.is_valid()):
