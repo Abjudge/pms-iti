@@ -7,7 +7,7 @@ from workspace.models import Workspace
 from django.shortcuts import  get_object_or_404
 from rest_framework.status import *
 from django.db.models import Q
-
+from . import github
 @api_view(['GET'])
 def Tasklist(request,id=None,status=None,project_id=None):
     if project_id:
@@ -36,6 +36,11 @@ def Tasklist(request,id=None,status=None,project_id=None):
 def TaskCreate(request):
     user_id= request.user.id
     request.data['owner_id']=user_id
+    name=request.data['name']
+    repo_name= Project.objects.get(id=request.data['project_id']).repo_name
+    sha = github.get_branch_sha(github.gh_user, github.gh_token, repo_name)
+    new_sync_branch=github.create_new_branch(github.gh_user, github.gh_token, sha,name ,repo_name)
+    request.data['github_branch_name']=new_sync_branch['ref'].split('/')[2]
     serializer = TaskSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
@@ -46,7 +51,6 @@ def TaskCreate(request):
 @api_view(['DELETE'])
 def TaskDelete(request,id):
     user_id= request.user.id
-
     owner_id=get_object_or_404(Task,id=id).owner_id.id
     if user_id != owner_id:
         return Response(status=HTTP_400_BAD_REQUEST, data="you can't delete this task")

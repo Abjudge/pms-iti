@@ -27,6 +27,7 @@ class Task (models.Model):
     tester_id = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE,related_name='tester')
     owner_id = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE,related_name='owner')
     attachment = models.FileField(upload_to='files/',blank=True,null=True)
+    github_branch_name = models.CharField(max_length=50,blank=True,null=True)
     def __str__(self):
         return self.name
     
