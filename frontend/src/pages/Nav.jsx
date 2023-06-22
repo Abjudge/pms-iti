@@ -24,7 +24,7 @@ const Nav = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const fourMinutes = 2000;
+    const fourMinutes = 10000;
 
 
 

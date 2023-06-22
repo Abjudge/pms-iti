@@ -10,7 +10,7 @@ const LoginPage = () => {
   const loggedin = useSelector((state) => state.TokensSlice.loggedin);
 
   const dispatch = useDispatch();
-  const fourMinutes = 2000;
+  const fourMinutes = 10000;
 
   const navigate = useNavigate();
 
