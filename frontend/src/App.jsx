@@ -13,6 +13,7 @@ import { logout, refreshTokens, setRunningInterval, setTokens } from "./redux/sl
 import Nav from './pages/Nav';
 import PrivateRoute from './utils/PrivateRoute';
 import NotLoggedIn from './utils/NotLoggedIn';
+import Register from './pages/Register';
 // import { applyMiddleware } from "@reduxjs/toolkit";
 
 const App = () => {
@@ -46,6 +47,7 @@ const App = () => {
 
           <Route element={<PrivateRoute>< HomePage /></PrivateRoute>} path="/" exact />
           <Route element={<PrivateRoute>< TestAxios /></PrivateRoute>} path="/test" exact />
+          <Route element={< Register />} path="/register" exact />
 
 
 

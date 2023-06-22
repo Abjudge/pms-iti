@@ -69,7 +69,7 @@ ROOT_URLCONF = 'pms.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],        
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -166,6 +166,7 @@ AUTH_USER_MODEL='accounts.UserAccount'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DJOSER={
+        
     'LOGIN_FIELD':'email',
     'USER_CREATE_PASSWORD_RETYPE':True,
     'USERNAME_CHANGED_EMAIL_CONFIRMATION':True,
@@ -176,7 +177,7 @@ DJOSER={
     'PASSWORD_RESET_CONFIRM_URL':'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL':'email/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL':'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL':True,
+    'SEND_ACTIVATION_EMAIL':False,
     'SERIALIZERS':{
         'user_create':'accounts.serializers.UserCreateSerializer',
         'user':'accounts.serializers.UserCreateSerializer',

@@ -6,25 +6,12 @@ import cv from '../mah.png';
 
 const NotLoggedIn = ({ children }) => {
 
-    const loggedin = useSelector((state) => state.TokensSlice.loggedin);
-    const full = useSelector((state) => state.TokensSlice.full);
+    const loggedout = useSelector((state) => state.TokensSlice.loggedout);
 
 
 
-    if (!full) {
-        return (
-            <>
-                <h2>checking your credentials </h2>
-                <p>if this page persisted then your logged out   click to go to login page      <Link to='/login'>login</Link><br />
-                </p>
-                <img src={cv} />
-                {!loggedin ? children : <Navigate to="/" />}
-            </>
-        );
+    return (loggedout ? children : <Navigate to="/" />);
 
-    } else {
-        return (!loggedin ? children : <Navigate to="/" />);
-    }
 
 };
 // sdfdsfsd

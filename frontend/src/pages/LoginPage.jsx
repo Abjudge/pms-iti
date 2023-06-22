@@ -1,5 +1,5 @@
 import React from 'react';
-import { refreshTokens, setLoggedIn, setRunningInterval, setTokens, setUser, logout, updateFull } from '../redux/slices/TokensSlice';
+import { refreshTokens, setLoggedIn, setRunningInterval, setTokens, setUser, logout, updateFull, setloggedout } from '../redux/slices/TokensSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -54,6 +54,7 @@ const LoginPage = () => {
 
           dispatch(setRunningInterval(interval));
           dispatch(setLoggedIn());
+          dispatch(setloggedout());
 
 
           console.log("🚀 ~ file: LoginPage.jsx:55 ~ loginUser ~ refresh:", refresh);
@@ -65,7 +66,7 @@ const LoginPage = () => {
         }
 
       } catch (error) {
-        alert('Something faild to make request !' + error.response.status);
+        // alert('Something faild to make request !' + error.response.status);
         dispatch(logout());
       }
 

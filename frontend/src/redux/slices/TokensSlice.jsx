@@ -6,6 +6,7 @@ import jwt_decode from "jwt-decode";
 
 
 const initialState = {
+  loggedout: false,
   tokens: {},
   user: {},
   full: false,
@@ -89,6 +90,12 @@ const TokensSlice = createSlice({
 
 
     },
+    setloggedout: (state, action) => {
+
+      state.loggedout = false;
+
+
+    },
     setupdateTokensfun: (state, action) => {
 
       state.updateTokensfun = action.payload;
@@ -116,7 +123,7 @@ const TokensSlice = createSlice({
       state.full = false;
       state.user = {};
       state.loggedin = false;
-
+      state.loggedout = true;
     },
 
   },
@@ -146,7 +153,7 @@ const TokensSlice = createSlice({
       console.log("🚀 ~ file: TokensSlice.jsx:142 ~ builder.addCase ~ state.tokens.access:", state.tokens.access);
       state.user.user_id = user_id;
       // console.log("🚀 ~ file: TokensSlice.jsx:89 ~ builder.addCase ~ user_id:", user_id);
-      state.loggedin = true; 
+      state.loggedin = true;
       state.full = true;
 
 
@@ -156,6 +163,6 @@ const TokensSlice = createSlice({
     });
   },
 });
-export const { setTokens, updateFull, setUser, logout, setupdateTokensfun, setRunningInterval, setLoggedIn } = TokensSlice.actions;
+export const { setTokens, updateFull, setloggedout, setUser, logout, setupdateTokensfun, setRunningInterval, setLoggedIn } = TokensSlice.actions;
 
 export default TokensSlice.reducer;

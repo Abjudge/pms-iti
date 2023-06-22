@@ -1,0 +1,14 @@
+{% load i18n %}
+{% blocktrans %}
+Hello!
+
+You are receiving this email because a user has created an account on {{ site_name }} using this email address.
+
+To activate the account, please click the link below:
+
+<a href="http://localhost:3000/activate/{{ uid }}/{{ token }}/">
+Activate your account
+</a>
+
+If you didn't request this email, please ignore it.
+{% endblocktrans %}
