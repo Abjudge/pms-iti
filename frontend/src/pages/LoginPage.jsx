@@ -11,7 +11,7 @@ const LoginPage = () => {
   const intervaltime = useSelector((state) => state.TokensSlice.intervaltime);
 
   const dispatch = useDispatch();
-  
+
 
   const navigate = useNavigate();
 
@@ -31,7 +31,7 @@ const LoginPage = () => {
           "email": e.target.email.value,
           "password": e.target.password.value
 
-        }
+        }, { headers: { "Content-Type": "application/json", }, }
 
         );
         // ddd

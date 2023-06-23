@@ -12,14 +12,14 @@ const initialState = {
   full: false,
   running_interval: {},
   loggedin: false,
-  intervaltime:5000,
+  intervaltime: 5000,
 };
 
 export const refreshTokens = createAsyncThunk("refreshTokens", async (refresh) => {
 
   const { data } = await axios.post("http://127.0.0.1:8000/auth/jwt/refresh/", {
     "refresh": refresh,
-  }
+  }, { headers: { "Content-Type": "application/json", }, }
   );
   console.log("🚀 ~ file: TokensSlice.jsx:33 ~ refreshTokens ~ data.access:", data.access);
   return data;
