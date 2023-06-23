@@ -13,6 +13,7 @@ import { logout, refreshTokens, setRunningInterval, setTokens } from "../redux/s
 
 const Nav = () => {
 
+    const intervaltime = useSelector((state) => state.TokensSlice.intervaltime);
 
 
 
@@ -24,7 +25,7 @@ const Nav = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const fourMinutes = 10000;
+    const fourMinutes = 5000;
 
 
 
@@ -51,7 +52,7 @@ const Nav = () => {
             const interval = setInterval(() => {
                 dispatch(refreshTokens(tokens_from_local_Storage.refresh));
             }
-                , fourMinutes);
+                , intervaltime);
             console.log('IIIiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
 
             dispatch(setRunningInterval(interval));

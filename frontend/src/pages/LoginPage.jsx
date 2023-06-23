@@ -6,11 +6,12 @@ import { useNavigate } from 'react-router-dom';
 import jwt_decode from "jwt-decode";
 
 const LoginPage = () => {
-  alert("login page rendered");
+  // alert("login page rendered");
   const loggedin = useSelector((state) => state.TokensSlice.loggedin);
+  const intervaltime = useSelector((state) => state.TokensSlice.intervaltime);
 
   const dispatch = useDispatch();
-  const fourMinutes = 10000;
+  
 
   const navigate = useNavigate();
 
@@ -48,7 +49,7 @@ const LoginPage = () => {
           const interval = setInterval(() => {
             dispatch(refreshTokens(refresh));
           }
-            , fourMinutes);
+            , intervaltime);
 
           console.log("🚀 ~ file: LoginPage.jsx:52 ~ interval ~ interval:", interval);
 

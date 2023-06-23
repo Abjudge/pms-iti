@@ -13,7 +13,7 @@ const Register = () => {
             "last_name": e.target.last_name.value,
             "password": e.target.password.value,
             "re_password": e.target.re_password.value,
-        }).then(alert("success")).catch((e) => alert("error" + e.response.status));
+        }).then().catch((e) => alert("error" + e.response.status));
 
     };
 

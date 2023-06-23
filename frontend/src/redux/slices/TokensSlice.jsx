@@ -12,6 +12,7 @@ const initialState = {
   full: false,
   running_interval: {},
   loggedin: false,
+  intervaltime:5000,
 };
 
 export const refreshTokens = createAsyncThunk("refreshTokens", async (refresh) => {
@@ -67,7 +68,7 @@ const TokensSlice = createSlice({
       if (state.loggedin) {
         console.log("🚀 ~ file: TokensSlice.jsx:62 ~ state.running_interval:", state.running_interval);
 
-        alert("interval cleared");
+        // alert("interval cleared");
 
         clearInterval(state.running_interval);
       }
