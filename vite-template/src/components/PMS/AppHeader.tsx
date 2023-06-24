@@ -15,7 +15,7 @@ import {
 import { MantineLogo } from '@mantine/ds';
 import { IconChevronDown, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../../redux/slices/TokensSlice';
 
 export default function AppShellDemo() {
@@ -187,6 +187,9 @@ export default function AppShellDemo() {
               <Menu.Item icon={<IconUserCircle size={14} />}>Profile</Menu.Item>
               <Menu.Item onClick={handleLogout} icon={<IconLogout2 size={14} />}>
                 Logout
+              </Menu.Item>
+              <Menu.Item>
+                <Link to="/test">test</Link>
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
