@@ -5,7 +5,7 @@ import Login from './components/Login';
 import Nav from './components/Nav';
 import Register from './components/Register';
 import MainAppShell from './components/PMS/MainAppShell';
-// import TestAxios from './components/TestAxios';
+import TestAxios from './components/TestAxios';
 import PrivateRoute from './utils/PrivateRoute';
 import NotLoggedIn from './utils/NotLoggedIn';
 
