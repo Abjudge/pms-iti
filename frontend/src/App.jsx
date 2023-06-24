@@ -2,14 +2,10 @@
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import TestAxios from './pages/TestAxios';
-import React, { useState, useEffect, useRef } from "react";
-import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom';
-import axios from "axios";
+import React, {  } from "react";
+import { Link, Route, Routes } from 'react-router-dom';
 import { BrowserRouter } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
 // import cv from './mah.png';
-import jwt_decode from "jwt-decode";
-import { logout, refreshTokens, setRunningInterval, setTokens } from "./redux/slices/TokensSlice";
 import Nav from './pages/Nav';
 import PrivateRoute from './utils/PrivateRoute';
 import NotLoggedIn from './utils/NotLoggedIn';
