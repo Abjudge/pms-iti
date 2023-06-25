@@ -9,7 +9,7 @@ const initialState = {
   full: false,
   running_interval: {},
   loggedin: false,
-  intervaltime: 20000,
+  intervaltime: 200000,
   baseURL: 'http://127.0.0.1:8000',
 };
 
@@ -29,7 +29,7 @@ const TokensSlice = createSlice({
   initialState,
   reducers: {
     setTokens: (state, action) => {
-      const { access, refresh } = action.payload;
+      const { access, refresh } = action.payload; // {acess:"dsfs", }
       state.tokens.access = access;
       state.tokens.refresh = refresh;
     },

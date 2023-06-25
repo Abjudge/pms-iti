@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import MyAxios from '../utils/AxiosInstance';
+import { GetWorkSpaces } from '../redux/slices/WorkSpacesSlice';
 
 const TestAxios = () => {
   // alert("test mount");
-
+  const dispatch = useDispatch();
   const tokens = useSelector((state) => state.TokensSlice.tokens);
   const baseURL = useSelector((state) => state.TokensSlice.baseURL);
 
@@ -16,28 +17,35 @@ const TestAxios = () => {
   // const [projects, setProjects] = useState();
   // const [user, setUser] = useState();
 
-  const fetchData = async () => {
-    // workspaces
-    try {
-      const response = await MyAxios.get('workspaces/', {
-        headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
-      });
-
-      if (response.status == 207) {
-        setimage(response.data.data[2].image);
-        setWorkspaces(await JSON.stringify(response.data));
-      } else {
-        SetFailed(true);
-      }
-    } catch (error) {
-      // alert("fetch error ");
-      SetFailed(true);
-    }
+  const trying = () => {
+    dispatch(GetWorkSpaces(tokens.access));
   };
-
   useEffect(() => {
-    fetchData();
+    // fetchData();
+    trying();
   }, [tokens, failed]);
+
+  // const fetchData = async () => {
+  //   // workspaces
+  //   try {
+  //     const response = await MyAxios.get('workspaces/', {
+  //       headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
+  //     });
+
+  //     if (response.status == 200) {
+  //       setimage(response.data[2].image);
+  //       setWorkspaces(await JSON.stringify(response.data));
+  //     } else {
+  //       SetFailed(!failed);
+  //       // alert(failed);
+  //     }
+  //   } catch (error) {
+  //     // alert("fetch error ");
+
+  //     SetFailed(!failed);
+  //     // alert(failed);
+  //   }
+  // };
 
   return (
     <>

@@ -56,8 +56,8 @@ def UpdateWorkspace(request,id):
     
     if(updateobjectafterupdate.is_valid()):
         updateobjectafterupdate.save()
-        return Response(status=HTTP_202_ACCEPTED,data=updateobjectafterupdate.data)
-    return Response(status=HTTP_406_NOT_ACCEPTABLE,data={"detail":"not valid update data"})
+        return Response(status=HTTP_200_OK,data=updateobjectafterupdate.data)
+    return Response(status=HTTP_400_BAD_REQUEST,data={"detail":"not valid update data"})
 
 @api_view(['POST'])
 
@@ -81,9 +81,9 @@ def AddWorkspace(request):
     print(item.errors)
     if(item.is_valid()):
         item.save()
-        return  Response(status=HTTP_200_OK,    )
+        return  Response(status=HTTP_200_OK,data=item.data)
     else:
-        return  Response(status=HTTP_417_EXPECTATION_FAILED)
+        return  Response(status=HTTP_400_BAD_REQUEST)
 
 
 
@@ -93,9 +93,60 @@ def ListWorkspace(request,id=None):
     if(id is not None):
         data=get_object_or_404(Workspace,id=id)
         dataserlized=Workspaceserializer(data)
-        return Response(status=HTTP_202_ACCEPTED, data={'data': dataserlized.data})
+        return Response(status=HTTP_200_OK, data= dataserlized.data)
     else:
         data=Workspace.objects.all()
         dataserlized=Workspaceserializer(data,many=True)
-        return Response(status=HTTP_207_MULTI_STATUS,data={'data':dataserlized.data})
+        return Response(status=HTTP_200_OK,data=dataserlized.data)
+
+
+
+
+
+@api_view(['POST'])
+def addMember(request,ws_id):
+
+    data = request.POST.copy()    
+       
+    data['Workspace_id']=ws_id
+    user_id=data['user_id']
+    member_id=WorkspaceMember.objects.filter(user_id=user_id,Workspace_id=ws_id)
+    print(member_id)
+    print(type(member_id))
+    if member_id : 
+        return Response(status=HTTP_400_BAD_REQUEST , data='user is already a member in this worlspace')
+          
+    else:
+    # print(request.data['Workspace_id'])
+        print('*************************************')    
+        memberserialized= WorkspaceMemberserializer(data=data)
+        if memberserialized.is_valid():
+            memberserialized.save()
+            return Response(status=HTTP_200_OK , data=memberserialized.data)
+    
+@api_view(['GET'])
+def listMembers(request, ws_id):
+    members = WorkspaceMember.objects.filter(Workspace_id=ws_id)
+    serializer = WorkspaceMemberserializer(members, many=True)
+    return Response(status=HTTP_200_OK, data=serializer.data)
+
+@api_view(['DELETE'])
+def deleteMember(request,id):
+    member = get_object_or_404(Workspace,id=id)
+    member.delete()
+    return Response(HTTP_200_OK)
+
+
+@api_view(['PUT'])
+def updateMember(request, id):
+    member = get_object_or_404(WorkspaceMember, id=id)
+    serializer = WorkspaceMemberserializer(instance=member, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(status=HTTP_200_OK, data=serializer.data)
+    return Response(status=HTTP_400_BAD_REQUEST, data={"detail": serializer.errors})
+
+        
+   
+         
 

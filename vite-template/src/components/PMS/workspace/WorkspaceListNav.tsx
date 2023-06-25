@@ -1,47 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useListState, useDisclosure } from '@mantine/hooks';
 import {
-  AppShell,
   Navbar,
-  Header,
-  Footer,
-  Aside,
   Text,
-  MediaQuery,
-  Burger,
   useMantineTheme,
-  Avatar,
-  Menu,
   Group,
-  Center,
   Button,
   Title,
   Modal,
   TextInput,
   FileInput,
-  Box,
-  Table,
-  Badge,
   NavLink,
   ScrollArea,
   rem,
   createStyles,
   UnstyledButton,
 } from '@mantine/core';
-import { MantineLogo } from '@mantine/ds';
-import { IconPlus, IconChevronDown, IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
+import { IconPlus } from '@tabler/icons-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { GetWorkSpaces } from '../../../redux/slices/WorkSpacesSlice';
 
 export default function WorkspaceListNav() {
-  const theme = useMantineTheme();
-  const [opened, setOpened] = useState(false);
-  const [openedModal, { open, close }] = useDisclosure(false);
-  const [values, handlers] = useListState([{ a: 1 }]);
-  const [workspacesList, setWorkspacesList] = useState([]);
-
   const useStyles = createStyles((theme) => ({
     header: {
-      backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background,
+      backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
+        .background,
       borderBottom: 0,
     },
 
@@ -50,11 +34,9 @@ export default function WorkspaceListNav() {
       cursor: 'pointer',
       '&:hover': {
         borderRadius: theme.radius.xl,
-        backgroundColor:
-          theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
       },
     },
-
 
     inner: {
       height: rem(56),
@@ -64,7 +46,8 @@ export default function WorkspaceListNav() {
     },
 
     links: {
-      [theme.fn.smallerThan('sm')]: { // override default link color
+      [theme.fn.smallerThan('sm')]: {
+        // override default link color
         display: 'none',
       },
     },
@@ -91,8 +74,6 @@ export default function WorkspaceListNav() {
           0.1
         ),
       },
-
-
     },
 
     linkLabel: {
@@ -108,88 +89,108 @@ export default function WorkspaceListNav() {
       },
 
       '&:active': {
-
         backgroundColor: theme.colors.gray[3],
       },
-
-
     },
-
   }));
 
+  const [opened, setOpened] = useState(false);
+  const [openedModal, { open, close }] = useDisclosure(false);
+  const [values, handlers] = useListState([{ a: 1 }]);
+  // const [workspacesList, setWorkspacesList] = useState([]);
+  const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
+  const fetched = useSelector((state) => state.WorkSpacesSlice.fetched);
+  const tokens = useSelector((state) => state.TokensSlice.tokens);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // fetchData();
+    dispatch(GetWorkSpaces(tokens.access));
+  }, []);
   const { classes } = useStyles();
 
   function createWorkspace(e) {
-    e.preventDefault();
-
-    // Read the form data
-    const form = e.target;
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    setWorkspacesList(prevList => [...prevList, data]);
-    close();
+    //   e.preventDefault();
+    //   // Read the form data
+    //   const form = e.target;
+    //   const formData = new FormData(form);
+    //   const data = Object.fromEntries(formData.entries());
+    //   // setWorkspacesList((prevList) => [...prevList, data]);
+    //   close();
+    // }
+    // const navigate = useNavigate();
+    // function goToWorkspace(e) {
+    //   console.log(e.target.textContent);
+    //   navigate(`/workspace/${e.target.textContent}`);
   }
+  if (fetched == true) {
+    console.log('🚀 ~ file: WorkspaceListNav.tsx:137 ~ WorkspaceListNav ~ workspaces:', workspaces);
 
-  const navigate = useNavigate();
-
-  function goToWorkspace(e) {
-    console.log(e.target.textContent);
-    navigate(`/workspace/${e.target.textContent}`);
-  }
-
-  const workspaces = workspacesList.map((workspace) => <NavLink fz="lg" color="#868e96" key={workspace} label={workspace.workspaceName} onClick={goToWorkspace}/>);
-  console.log(workspaces);
-
-  return (
-
-    <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ md: 700, lg: 300 }}>
-      <Modal opened={openedModal} onClose={close} title="Create Workspace" centered>
-        <form action="" method="post" onSubmit={createWorkspace}>
-
+    return (
+      <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ md: 700, lg: 300 }}>
+        <Modal opened={openedModal} onClose={close} title="Create Workspace" centered>
+          {/* <form action="" method="post" onSubmit={createWorkspace}>
           <TextInput
             key={values.length}
-            name='workspaceName'
+            name="workspaceName"
             placeholder="Workspace name"
             label="Workspace name"
             withAsterisk
             required
           />
-          <TextInput
-            placeholder="Workspace description"
-            label="Workspace description"
-          >
-          </TextInput>
+          <TextInput placeholder="Workspace description" label="Workspace description"></TextInput>
           <FileInput
             label="Workspace image"
             accept="image/*"
             placeholder="Workspace image"
+          ></FileInput>
+
+          <Group
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '20px',
+            }}
           >
-          </FileInput>
-
-          <Group style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px' }}>
-
             <Button type="submit">Create</Button>
 
-
-            <Button type="button" onClick={close} color="red">Cancel</Button>
+            <Button type="button" onClick={close} color="red">
+              Cancel
+            </Button>
           </Group>
-        </form>
-      </Modal>
-      <Group position="apart" spacing="xs" mb="md">
-        <Title color="gray" order={5}>Workspaces</Title>
-        <UnstyledButton onClick={open} size="sm" className={classes.plusButton}>
-          <IconPlus color='gray' />
-        </UnstyledButton>
-      </Group>
-
-      <Navbar.Section grow component={ScrollArea} mx="-xs" px="xs">
+        </form> */}
+        </Modal>
         <Group position="apart" spacing="xs" mb="md">
-
-          {workspaces.length ? workspaces : <Text color='gray' fz="sm">No workspaces yet, hit the plus button to create one.</Text>}
-
+          <Title color="gray" order={5}>
+            Workspaces
+          </Title>
+          <UnstyledButton onClick={open} size="sm" className={classes.plusButton}>
+            <IconPlus color="gray" />
+          </UnstyledButton>
         </Group>
-      </Navbar.Section>
 
-    </Navbar>
-  );
+        <Navbar.Section grow component={ScrollArea} mx="-xs" px="xs">
+          <Group position="apart" spacing="xs" mb="md">
+            {fetched ? (
+              workspaces.map((workspace) => (
+                <NavLink
+                  fz="lg"
+                  color="#868e96"
+                  key={workspace.id}
+                  label={workspace.name}
+                  // onClick={goToWorkspace}
+                />
+              ))
+            ) : (
+              <Text color="gray" fz="sm">
+                No workspaces yet, hit the plus button to create one.
+              </Text>
+            )}
+          </Group>
+        </Navbar.Section>
+      </Navbar>
+    );
+  }
 }
