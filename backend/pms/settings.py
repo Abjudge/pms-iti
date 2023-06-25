@@ -92,8 +92,8 @@ DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'auth2',
-        'USER': 'elkady',
-        'PASSWORD': '123456',
+        'USER': 'openpg',
+        'PASSWORD': 'openpgpwd',
         'HOST': '127.0.0.1',
         'PORT': '5432'
     }
@@ -101,8 +101,8 @@ DATABASES = {
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
-EMAIL_HOST_USER='abdelrahmanelkady0@gmail.com'
-EMAIL_HOST_PASSWORD='dqaepayzaifwimmv'
+EMAIL_HOST_USER='abdelrhmanmamdouh76@gmail.com'
+EMAIL_HOST_PASSWORD='kyihwowvrkovdmfb'
 EMAIL_USE_TLS=True
 
 # Password validation

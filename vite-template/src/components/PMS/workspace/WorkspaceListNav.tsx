@@ -20,6 +20,7 @@ import {
 import { IconPlus } from '@tabler/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { GetWorkSpaces } from '../../../redux/slices/WorkSpacesSlice';
+import { AddWorkSpace } from '../../../redux/slices/AddWorkSpace.jsx';
 
 export default function WorkspaceListNav() {
   const useStyles = createStyles((theme) => ({
@@ -101,66 +102,86 @@ export default function WorkspaceListNav() {
   const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
   const fetched = useSelector((state) => state.WorkSpacesSlice.fetched);
   const tokens = useSelector((state) => state.TokensSlice.tokens);
+  const addWorkspace = useSelector((state) => state.AddWorkSpaceSlice.workspace);
+  const addFetched = useSelector((state) => state.AddWorkSpaceSlice.fetched);
 
   const dispatch = useDispatch();
 
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  // }
+
   useEffect(() => {
     // fetchData();
+    // dispatch(AddWorkSpace(tokens.access));
     dispatch(GetWorkSpaces(tokens.access));
+    console.log(tokens.access);
   }, []);
   const { classes } = useStyles();
-
-  function createWorkspace(e) {
-    //   e.preventDefault();
-    //   // Read the form data
-    //   const form = e.target;
-    //   const formData = new FormData(form);
-    //   const data = Object.fromEntries(formData.entries());
-    //   // setWorkspacesList((prevList) => [...prevList, data]);
-    //   close();
-    // }
-    // const navigate = useNavigate();
-    // function goToWorkspace(e) {
-    //   console.log(e.target.textContent);
-    //   navigate(`/workspace/${e.target.textContent}`);
-  }
+  const createWorkspace = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    console.log(formData);
+    const data = Object.fromEntries(formData.entries());
+    dispatch(AddWorkSpace(data, tokens.access));
+  };
+  // function createWorkspace(e) {
+  //     e.preventDefault();
+  //     // Read the form data
+  //     const form = e.target;
+  //     const formData = new FormData(form);
+  //     const data = Object.fromEntries(formData.entries());
+  //     // setWorkspacesList((prevList) => [...prevList, data]);
+  //     close();
+  //   }
+  //   // const navigate = useNavigate();
+  //   // function goToWorkspace(e) {
+  //   //   console.log(e.target.textContent);
+  //   //   navigate(`/workspace/${e.target.textContent}`);
+  // }
   if (fetched == true) {
     console.log('🚀 ~ file: WorkspaceListNav.tsx:137 ~ WorkspaceListNav ~ workspaces:', workspaces);
 
     return (
       <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ md: 700, lg: 300 }}>
         <Modal opened={openedModal} onClose={close} title="Create Workspace" centered>
-          {/* <form action="" method="post" onSubmit={createWorkspace}>
-          <TextInput
-            key={values.length}
-            name="workspaceName"
-            placeholder="Workspace name"
-            label="Workspace name"
-            withAsterisk
-            required
-          />
-          <TextInput placeholder="Workspace description" label="Workspace description"></TextInput>
-          <FileInput
-            label="Workspace image"
-            accept="image/*"
-            placeholder="Workspace image"
-          ></FileInput>
+          <form action="" method="post" onSubmit={createWorkspace}>
+            <TextInput
+              key={values.length}
+              type="text"
+              name="workspaceName"
+              placeholder="Workspace name"
+              label="Workspace name"
+              withAsterisk
+              required
+            />
+            <TextInput
+              name="workspaceDesc"
+              placeholder="Workspace description"
+              label="Workspace description"
+            ></TextInput>
+            <FileInput
+              name="WorkspaceImage"
+              label="Workspace image"
+              accept="image/*"
+              placeholder="Workspace image"
+            ></FileInput>
+            <Group
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '20px',
+              }}
+            >
+              <Button type="submit">Create</Button>
 
-          <Group
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '20px',
-            }}
-          >
-            <Button type="submit">Create</Button>
-
-            <Button type="button" onClick={close} color="red">
-              Cancel
-            </Button>
-          </Group>
-        </form> */}
+              <Button type="button" onClick={close} color="red">
+                Cancel
+              </Button>
+            </Group>
+          </form>
         </Modal>
         <Group position="apart" spacing="xs" mb="md">
           <Title color="gray" order={5}>
