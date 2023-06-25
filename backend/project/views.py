@@ -33,7 +33,7 @@ def AddProject(request):
     
     repo=github.create_repo(request.data['name'])
     request.data['clone_url']=repo[0]
-    request.data['repe_name']=repo[1]
+    request.data['repo_name']=repo[1]
     item=Projectselizer(data=request.data)
     
     if(item.is_valid()):
