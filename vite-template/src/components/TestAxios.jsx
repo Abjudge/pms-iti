@@ -17,35 +17,33 @@ const TestAxios = () => {
   // const [projects, setProjects] = useState();
   // const [user, setUser] = useState();
 
-  const trying = () => {
-    dispatch(GetWorkSpaces(tokens.access));
+  const fetchData = async () => {
+    // workspaces
+    try {
+      const response = await MyAxios.get('workspaces/', {
+        headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
+      });
+
+      if (response.status == 200) {
+        setimage(response.data[2].image);
+        setWorkspaces(await JSON.stringify(response.data));
+      } else {
+        SetFailed(true);
+        // alert(failed);
+      }
+    } catch (error) {
+      console.log('🚀 ~ file: TestAxios.jsx:35 ~ fetchData ~ error:', error);
+
+      alert('fetch error ');
+
+      SetFailed(true);
+      // alert(failed);
+    }
   };
   useEffect(() => {
-    // fetchData();
-    trying();
-  }, [tokens, failed]);
-
-  // const fetchData = async () => {
-  //   // workspaces
-  //   try {
-  //     const response = await MyAxios.get('workspaces/', {
-  //       headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
-  //     });
-
-  //     if (response.status == 200) {
-  //       setimage(response.data[2].image);
-  //       setWorkspaces(await JSON.stringify(response.data));
-  //     } else {
-  //       SetFailed(!failed);
-  //       // alert(failed);
-  //     }
-  //   } catch (error) {
-  //     // alert("fetch error ");
-
-  //     SetFailed(!failed);
-  //     // alert(failed);
-  //   }
-  // };
+    fetchData();
+    // trying();
+  }, []);
 
   return (
     <>
