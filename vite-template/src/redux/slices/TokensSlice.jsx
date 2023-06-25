@@ -9,7 +9,7 @@ const initialState = {
   full: false,
   running_interval: {},
   loggedin: false,
-  intervaltime: 200000,
+  intervaltime: 20000,
   baseURL: 'http://127.0.0.1:8000',
 };
 
@@ -111,7 +111,19 @@ const TokensSlice = createSlice({
       state.full = true;
     });
     builder.addCase(refreshTokens.rejected, (state, action) => {
-      TokensSlice.caseReducers.logout(state, action);
+      // TokensSlice.caseReducers.logout(state, action);
+      if (action.error.code == 'ERR_NETWORK') {
+        alert('network error');
+      } else if (action.error.code == 'token_not_valid') {
+        alert('tokens expired');
+        TokensSlice.caseReducers.logout(state, action);
+      } else {
+        alert('base case');
+
+        TokensSlice.caseReducers.logout(state, action);
+      }
+      console.log('🚀 ~ file: TokensSlice.jsx:115 ~ builder.addCase ~ action:', action);
+      console.log('🚀 ~ file: TokensSlice.jsx:115 ~ builder.addCase ~ action:', action.error);
       alert('failed to refresh');
     });
   },

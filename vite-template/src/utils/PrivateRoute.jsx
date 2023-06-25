@@ -8,7 +8,20 @@ const PrivateRoute = ({ children }) => {
   const full = useSelector((state) => state.TokensSlice.full);
 
   if (!loggedout) {
-    return <>{full ? children : <h2>Refreshing your credentials</h2>}</>;
+    return (
+      <>
+        {full ? (
+          children
+        ) : (
+          <h2>
+            <pre>
+              Refreshing your credentials if this page persist check your internet connection and
+              reload the page
+            </pre>
+          </h2>
+        )}
+      </>
+    );
   } else {
     return <Login />;
   }
