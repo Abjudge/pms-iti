@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { useSelector } from 'react-redux';
 import MyAxios from '../../utils/AxiosInstance';
 const initialState = {
   workspaces: {},
@@ -23,7 +22,7 @@ const WorkSpacesSlice = createSlice({
   initialState,
   reducers: {
     AddWorkSpace: (state, action) => {
-      state.workspaces += action.payload;
+      state.workspaces.push(action.payload);
     },
   },
 
@@ -42,6 +41,6 @@ const WorkSpacesSlice = createSlice({
   },
 });
 
-export const { addToCart } = WorkSpacesSlice.actions;
+export const { AddWorkSpace } = WorkSpacesSlice.actions;
 
 export default WorkSpacesSlice.reducer;

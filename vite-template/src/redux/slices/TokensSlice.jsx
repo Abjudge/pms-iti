@@ -9,7 +9,7 @@ const initialState = {
   full: false,
   running_interval: {},
   loggedin: false,
-  intervaltime: 20000,
+  intervaltime: 2000000,
   baseURL: 'http://127.0.0.1:8000',
 };
 

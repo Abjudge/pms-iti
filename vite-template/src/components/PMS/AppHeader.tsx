@@ -14,7 +14,7 @@ import {
 } from '@mantine/core';
 import { MantineLogo } from '@mantine/ds';
 import { IconChevronDown, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../../redux/slices/TokensSlice';
 
@@ -23,7 +23,11 @@ export default function AppShellDemo() {
   const [opened, setOpened] = useState(false);
   const [openedModal, { open, close }] = useDisclosure(false);
   const [values, handlers] = useListState([{ a: 1 }]);
-  const [workspacesList, setWorkspacesList] = useState([]);
+  // const [workspacesList, setWorkspacesList] = useState([]);
+
+  const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
+  const fetched = useSelector((state) => state.WorkSpacesSlice.fetched);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   // const workspaces = useWorkspacesStore((state) => state.workspaces);
@@ -99,7 +103,10 @@ export default function AppShellDemo() {
       },
     },
   }));
-
+  function goToWorkspace(id) {
+    console.log(id);
+    navigate(`/workspaces/workspace/${id}`);
+  }
   const { classes } = useStyles();
   const handleLogout = () => {
     dispatch(logout());
@@ -146,7 +153,17 @@ export default function AppShellDemo() {
 
             <Menu.Dropdown>
               <Menu.Label>Your workspaces</Menu.Label>
-              {/* {workspaces.length ? workspaces : <Text fz="xs"> No workspaces yet.</Text>} */}
+              {fetched ? (
+                workspaces.map((workspace) => (
+                  <Menu.Item key={workspace.id} onClick={() => goToWorkspace(workspace.id)}>
+                    {workspace.name}
+                  </Menu.Item>
+                ))
+              ) : (
+                <Text color="gray" fz="sm">
+                  No workspaces yet
+                </Text>
+              )}{' '}
             </Menu.Dropdown>
           </Menu>
 
@@ -167,8 +184,7 @@ export default function AppShellDemo() {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Label>Your workspaces</Menu.Label>
-              {/* {workspaces.length ? workspaces : <Text fz="xs"> No workspaces yet.</Text>} */}
+              <Menu.Label>Your projects</Menu.Label>
             </Menu.Dropdown>
           </Menu>
         </Group>

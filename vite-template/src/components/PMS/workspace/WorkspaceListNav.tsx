@@ -19,7 +19,8 @@ import {
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { GetWorkSpaces } from '../../../redux/slices/WorkSpacesSlice';
+import { AddWorkSpace, GetWorkSpaces } from '../../../redux/slices/WorkSpacesSlice';
+import MyAxios from '../../../utils/AxiosInstance';
 
 export default function WorkspaceListNav() {
   const useStyles = createStyles((theme) => ({
@@ -101,6 +102,8 @@ export default function WorkspaceListNav() {
   const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
   const fetched = useSelector((state) => state.WorkSpacesSlice.fetched);
   const tokens = useSelector((state) => state.TokensSlice.tokens);
+  const user = useSelector((state) => state.TokensSlice.user);
+  const baseURL = useSelector((state) => state.TokensSlice.baseURL);
 
   const dispatch = useDispatch();
 
@@ -110,19 +113,45 @@ export default function WorkspaceListNav() {
   }, []);
   const { classes } = useStyles();
 
-  function createWorkspace(e) {
-    //   e.preventDefault();
-    //   // Read the form data
-    //   const form = e.target;
-    //   const formData = new FormData(form);
-    //   const data = Object.fromEntries(formData.entries());
-    //   // setWorkspacesList((prevList) => [...prevList, data]);
-    //   close();
-    // }
-    // const navigate = useNavigate();
-    // function goToWorkspace(e) {
-    //   console.log(e.target.textContent);
-    //   navigate(`/workspace/${e.target.textContent}`);
+  async function createWorkspace(e) {
+    console.log(
+      '🚀 ~ file: WorkspaceListNav.tsx:128 ~ createWorkspace ~ e.target.image:',
+      e.target.image
+    );
+    console.log(
+      '🚀 ~ file: WorkspaceListNav.tsx:128 ~ createWorkspace ~ e.target.image:',
+      e.target.image.value
+    );
+
+    alert('run create');
+
+    e.preventDefault();
+    // Read the form data
+    const response = await MyAxios.post(
+      'workspaces/Add',
+      {
+        name: e.target.name.value,
+        description: e.target.description.value,
+        image: e.target.image.files[0],
+        owner_id: 1,
+      },
+      {
+        headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' },
+      }
+    );
+
+    if (response.status == 200) {
+      dispatch(AddWorkSpace(response.data));
+    } else {
+      alert('not succss');
+    }
+    // setWorkspacesList((prevList) => [...prevList, data]);
+    close();
+  }
+  const navigate = useNavigate();
+  function goToWorkspace(id) {
+    console.log(id);
+    navigate(`/workspaces/workspace/${id}`);
   }
   if (fetched == true) {
     console.log('🚀 ~ file: WorkspaceListNav.tsx:137 ~ WorkspaceListNav ~ workspaces:', workspaces);
@@ -130,37 +159,44 @@ export default function WorkspaceListNav() {
     return (
       <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ md: 700, lg: 300 }}>
         <Modal opened={openedModal} onClose={close} title="Create Workspace" centered>
-          {/* <form action="" method="post" onSubmit={createWorkspace}>
-          <TextInput
-            key={values.length}
-            name="workspaceName"
-            placeholder="Workspace name"
-            label="Workspace name"
-            withAsterisk
-            required
-          />
-          <TextInput placeholder="Workspace description" label="Workspace description"></TextInput>
-          <FileInput
-            label="Workspace image"
-            accept="image/*"
-            placeholder="Workspace image"
-          ></FileInput>
+          <form action="" method="post" onSubmit={createWorkspace} encType="multipart/form-data">
+            <TextInput
+              key={values.length}
+              name="name"
+              placeholder="Workspace name"
+              label="Workspace name"
+              withAsterisk
+              required
+            />
+            <TextInput
+              name="description"
+              placeholder="Workspace description"
+              label="Workspace description"
+              required
+            ></TextInput>
+            <FileInput
+              name="image"
+              label="Workspace image"
+              accept="image/*"
+              placeholder="Workspace image"
+              required
+            ></FileInput>
+            {/* <input type="file" name="image"></input> */}
+            <Group
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '20px',
+              }}
+            >
+              <Button type="submit">Create</Button>
 
-          <Group
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              padding: '20px',
-            }}
-          >
-            <Button type="submit">Create</Button>
-
-            <Button type="button" onClick={close} color="red">
-              Cancel
-            </Button>
-          </Group>
-        </form> */}
+              <Button type="button" onClick={close} color="red">
+                Cancel
+              </Button>
+            </Group>
+          </form>
         </Modal>
         <Group position="apart" spacing="xs" mb="md">
           <Title color="gray" order={5}>
@@ -175,13 +211,16 @@ export default function WorkspaceListNav() {
           <Group position="apart" spacing="xs" mb="md">
             {fetched ? (
               workspaces.map((workspace) => (
-                <NavLink
-                  fz="lg"
-                  color="#868e96"
-                  key={workspace.id}
-                  label={workspace.name}
-                  // onClick={goToWorkspace}
-                />
+                <>
+                  <NavLink
+                    fz="lg"
+                    color="#868e96"
+                    key={workspace.id}
+                    label={workspace.name}
+                    onClick={() => goToWorkspace(workspace.id)}
+                  />
+                  {/* <img src={baseURL + workspace.image} height="400px" alt="dfsgfdsgfd" /> */}
+                </>
               ))
             ) : (
               <Text color="gray" fz="sm">
