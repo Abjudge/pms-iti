@@ -133,7 +133,7 @@ export default function WorkspaceListNav() {
         name: e.target.name.value,
         description: e.target.description.value,
         image: e.target.image.files[0],
-        owner_id: user,
+        owner_id: user.user_id,
       },
       {
         headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' },
