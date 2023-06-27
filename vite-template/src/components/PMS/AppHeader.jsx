@@ -104,6 +104,7 @@ export default function AppShellDemo() {
 
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
+  const [userName, setUsername] = useState('');
   const [openedModal, { open, close }] = useDisclosure(false);
   const [values, handlers] = useListState([{ a: 1 }]);
   const tokens = useSelector((state) => state.TokensSlice.tokens);
@@ -136,8 +137,29 @@ export default function AppShellDemo() {
       alert('fetch error ');
     }
   };
+  const fetchUserData = async () => {
+    // workspaces
+    try {
+      const response = await MyAxios.get('auth/users/me/', {
+        headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
+      });
+
+      if (response.status == 200) {
+        setUsername(
+          response.data.first_name.charAt(0).toUpperCase() +
+            response.data.last_name.charAt(0).toUpperCase()
+        ); // dispatch(SetWorkSpace(response.data));
+        alert('succeess222');
+      } else {
+        alert('failed222');
+      }
+    } catch (error) {
+      alert('fetch error22 ');
+    }
+  };
   useEffect(() => {
     fetchData();
+    fetchUserData();
     // trying();
   }, []);
   function goToWorkspace(id) {
@@ -145,9 +167,9 @@ export default function AppShellDemo() {
     navigate(`/workspaces/workspace/${id}`);
   }
   // get user's first and last name from api
-  const first_name = 'Mahmoud';
-  const last_name = 'Tarek';
-  const userName = first_name.charAt(0).toUpperCase() + last_name.charAt(0).toUpperCase();
+  // const first_name = 'Mahmoud';
+  // const last_name = 'Tarek';
+  // const userName = first_name.charAt(0).toUpperCase() + last_name.charAt(0).toUpperCase();
   alert('app header mounted');
   return (
     <Header height={{ base: 50, md: 70 }} p="md">
