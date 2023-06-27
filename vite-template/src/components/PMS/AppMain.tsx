@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useListState , useDisclosure } from '@mantine/hooks';
+import { Route, useLocation } from 'react-router-dom';
+import { useListState, useDisclosure } from '@mantine/hooks';
 import {
   AppShell,
   Navbar,
@@ -30,6 +30,9 @@ import {
 import { MantineLogo } from '@mantine/ds';
 import { IconPlus, IconChevronDown, IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
 import WorkspaceListMain from './workspace/WorkspaceListMain';
+import WorkspaceViewMain from './workspace/WorkspaceViewMain';
+import WorkspaceEdit from './workspace/WorkspaceEdit';
+import ProjectViewMain from './project/ProjectViewMain';
 
 export default function AppMain() {
   const theme = useMantineTheme();
@@ -53,27 +56,27 @@ export default function AppMain() {
           theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
       },
     },
-    
-  
+
+
     inner: {
       height: rem(56),
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
     },
-  
+
     links: {
       [theme.fn.smallerThan('sm')]: { // override default link color
         display: 'none',
       },
     },
-  
+
     burger: {
       [theme.fn.largerThan('sm')]: {
         display: 'none',
       },
     },
-  
+
     link: {
       display: 'block',
       lineHeight: 1,
@@ -83,7 +86,7 @@ export default function AppMain() {
       color: theme.black,
       fontSize: theme.fontSizes.sm,
       fontWeight: 500,
-  
+
       '&:hover': {
         backgroundColor: theme.fn.lighten(
           theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
@@ -91,9 +94,9 @@ export default function AppMain() {
         ),
       },
 
- 
+
     },
-  
+
     linkLabel: {
       marginRight: rem(5),
       color: 'black',
@@ -102,33 +105,44 @@ export default function AppMain() {
     plusButton: {
       padding: '5px',
       borderRadius: '5px',
-      '&:hover':{
+      '&:hover': {
         backgroundColor: theme.colors.gray[1],
       },
 
-      '&:active':{
-    
+      '&:active': {
+
         backgroundColor: theme.colors.gray[3],
       },
 
- 
+
     },
 
   }));
 
   const { classes } = useStyles();
-  
-  const { pathname } = useLocation();
 
 
-  switch (pathname) {
-  case '/workspaces':
-    return <WorkspaceListMain />;
-
-  case '/workspaces/workspace':
-    return <Route path="/workspaces/workspace" element={<WorkspaceViewMain />} />
-    ;
+  const { pathname }  = useLocation();
+  if (pathname === '/workspaces') {
+    return (
+      <WorkspaceListMain />
+    )
   }
-  
-
+  switch (pathname) {
+    case '/workspaces/workspace':
+      return (
+        <WorkspaceViewMain />
+      )
+    case '/workspaces/workspace/edit':
+      return (
+        <WorkspaceEdit />
+      )
+    case '/workspaces/workspace/project':
+      return (
+        <ProjectViewMain />
+      )
 }
+
+  }
+
+

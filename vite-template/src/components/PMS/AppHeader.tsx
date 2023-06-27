@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import { useListState, useDisclosure } from '@mantine/hooks';
 import {
+  AppShell,
+  Navbar,
   Header,
+  Text,
   MediaQuery,
   Burger,
   useMantineTheme,
@@ -9,33 +12,39 @@ import {
   Menu,
   Group,
   Center,
+  Button,
+  Title,
+  Modal,
+  TextInput,
+  FileInput,
+  Box,
+  Table,
+  Badge,
+  NavLink,
+  ScrollArea,
   rem,
   createStyles,
+  UnstyledButton,
 } from '@mantine/core';
 import { MantineLogo } from '@mantine/ds';
-import { IconChevronDown, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
+import { IconPlus, IconChevronDown, IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../../redux/slices/TokensSlice';
+import WorkspaceListNav from './workspace/WorkspaceListNav';
 
 export default function AppShellDemo() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [openedModal, { open, close }] = useDisclosure(false);
   const [values, handlers] = useListState([{ a: 1 }]);
-  // const [workspacesList, setWorkspacesList] = useState([]);
+  const [workspacesList, setWorkspacesList] = useState([]);
 
-  const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
-  const fetched = useSelector((state) => state.WorkSpacesSlice.fetched);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
   // const workspaces = useWorkspacesStore((state) => state.workspaces);
 
   const useStyles = createStyles((theme) => ({
     header: {
-      backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
-        .background,
+      backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background,
       borderBottom: 0,
     },
 
@@ -44,9 +53,18 @@ export default function AppShellDemo() {
       cursor: 'pointer',
       '&:hover': {
         borderRadius: theme.radius.xl,
-        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
+        backgroundColor:
+          theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
       },
     },
+
+    userName: {
+      color: "white",
+      backgroundColor: "#339af0",
+      padding: 7,
+      borderRadius: "50%"
+    },
+
 
     inner: {
       height: rem(56),
@@ -56,8 +74,7 @@ export default function AppShellDemo() {
     },
 
     links: {
-      [theme.fn.smallerThan('sm')]: {
-        // override default link color
+      [theme.fn.smallerThan('sm')]: { // override default link color
         display: 'none',
       },
     },
@@ -84,6 +101,8 @@ export default function AppShellDemo() {
           0.1
         ),
       },
+
+
     },
 
     linkLabel: {
@@ -99,29 +118,30 @@ export default function AppShellDemo() {
       },
 
       '&:active': {
+
         backgroundColor: theme.colors.gray[3],
       },
+
+
     },
+
   }));
-  function goToWorkspace(id) {
-    console.log(id);
-    navigate(`/workspaces/workspace/${id}`);
-  }
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { classes } = useStyles();
   const handleLogout = () => {
     dispatch(logout());
     navigate('/login');
   };
+
+  // get user's first and last name from api
+  const first_name = "Mahmoud";
+  const last_name = "Tarek"
+  const userName = first_name.charAt(0).toUpperCase() + last_name.charAt(0).toUpperCase()
+
   return (
     <Header height={{ base: 50, md: 70 }} p="md">
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          height: '100%',
-        }}
-      >
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
         <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
           <Burger
             opened={opened}
@@ -135,13 +155,8 @@ export default function AppShellDemo() {
           <MantineLogo size={34} />
         </Group>
         <Group>
-          <Menu
-            shadow="md"
-            width={200}
-            trigger="hover"
-            transitionProps={{ exitDuration: 0 }}
-            withinPortal
-          >
+
+          <Menu shadow="md" width={200} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
             <Menu.Target>
               <a className={classes.link}>
                 <Center>
@@ -153,27 +168,11 @@ export default function AppShellDemo() {
 
             <Menu.Dropdown>
               <Menu.Label>Your workspaces</Menu.Label>
-              {fetched ? (
-                workspaces.map((workspace) => (
-                  <Menu.Item key={workspace.id} onClick={() => goToWorkspace(workspace.id)}>
-                    {workspace.name}
-                  </Menu.Item>
-                ))
-              ) : (
-                <Text color="gray" fz="sm">
-                  No workspaces yet
-                </Text>
-              )}{' '}
+              {/* {workspaces.length ? workspaces : <Text fz="xs"> No workspaces yet.</Text>} */}
             </Menu.Dropdown>
           </Menu>
 
-          <Menu
-            shadow="md"
-            width={200}
-            trigger="hover"
-            transitionProps={{ exitDuration: 0 }}
-            withinPortal
-          >
+          <Menu shadow="md" width={200} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
             <Menu.Target>
               <a className={classes.link}>
                 <Center>
@@ -184,33 +183,28 @@ export default function AppShellDemo() {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Label>Your projects</Menu.Label>
+              <Menu.Label>Your workspaces</Menu.Label>
+              {/* {workspaces.length ? workspaces : <Text fz="xs"> No workspaces yet.</Text>} */}
             </Menu.Dropdown>
           </Menu>
+
+
         </Group>
-        <Group className={classes.avatar}>
-          <Menu shadow="md" width={200}>
-            <Menu.Target>
-              <Avatar
-                src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?cs=srgb&dl=pexels-pixabay-220453.jpg&fm=jpg"
-                alt="it's me"
-                ml="auto"
-                radius="xl"
-              />
+        <Group className={classes.avatar} >
+          <Menu shadow="md" width={200} >
+            <Menu.Target >
+              <Title order={5} className={classes.userName}>{userName}</Title>
             </Menu.Target>
 
             <Menu.Dropdown>
               <Menu.Item icon={<IconUserCircle size={14} />}>Profile</Menu.Item>
-              <Menu.Item onClick={handleLogout} icon={<IconLogout2 size={14} />}>
-                Logout
-              </Menu.Item>
-              <Menu.Item>
-                <Link to="/test">test</Link>
-              </Menu.Item>
+              <Menu.Item onClick={handleLogout} icon={<IconLogout2 size={14} />}>Logout</Menu.Item>
             </Menu.Dropdown>
           </Menu>
+
         </Group>
+
       </div>
     </Header>
-  );
+  )
 }

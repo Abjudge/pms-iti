@@ -1,7 +1,9 @@
 import React from 'react';
+import axios from 'axios';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useToggle, upperFirst } from '@mantine/hooks';
-import { useForm } from '@mantine/form';
+import { useMutation } from '@tanstack/react-query';
+import { useToggle, upperFirst, useDisclosure } from '@mantine/hooks';
+import { useForm, matchesField } from '@mantine/form';
 import {
     TextInput,
     PasswordInput,
@@ -16,12 +18,22 @@ import {
     Container,
     Flex,
     Center,
+    LoadingOverlay,
+    Box,
+    Loader,
 } from '@mantine/core';
 import { check } from 'prettier';
+import VerificationEmailSent from './VerificationEmailSent';
 
 export default function Register() {
+
     const navigate = useNavigate();
     const location = useLocation();
+
+    const mutation = useMutation(newUser => {
+        return axios.post('http://127.0.0.1:8000/auth/users/', newUser)
+    })
+
 
 
     const form = useForm({
@@ -30,19 +42,46 @@ export default function Register() {
             firstName: '',
             lastName: '',
             password: '',
-            terms: true,
+            confirmPassword: '',
         },
 
         validate: {
             email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
             password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+            confirmPassword: matchesField('password', 'Passwords are not the same'),
 
         },
     });
 
+
+    const registerUser = (values: typeof form.values) => {
+        mutation.mutate({
+            email: values.email,
+            first_name: values.firstName,
+            last_name: values.lastName,
+            password: values.password,
+            re_password: values.confirmPassword,
+        });
+
+
+    };
+
+    const handleError = (errors: typeof form.errors) => {
+        console.log('errors', errors);
+    };
+
+
+
+
     return (
 
         <Center w={500} maw={600} h={600} mx="auto">
+
+
+
+
+
+
 
             <Paper sx={{ width: '100%', boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;' }} radius="md" p="xl"  >
                 <Text size="lg" weight={500}>
@@ -53,10 +92,16 @@ export default function Register() {
 
                 <Divider my="lg" />
 
-                <form onSubmit={form.onSubmit(() => { })}>
+
+                <form onSubmit={form.onSubmit(registerUser, handleError)}>
+
+                    {mutation.isLoading && <LoadingOverlay visible ></LoadingOverlay>}
+
+
                     <Stack>
                         <TextInput
                             required
+                            name="first_name"
                             label="First Name"
                             placeholder="Your First Name"
                             value={form.values.firstName}
@@ -65,8 +110,9 @@ export default function Register() {
                         />
                         <TextInput
                             required
+                            name="last_name"
                             label="Last Name"
-                            placeholder="Your First Name"
+                            placeholder="Your Last Name"
                             value={form.values.lastName}
                             onChange={(event) => form.setFieldValue('lastName', event.currentTarget.value)}
                             radius="md"
@@ -74,6 +120,7 @@ export default function Register() {
 
                         <TextInput
                             required
+                            name="email"
                             label="Email"
                             placeholder="hello@mantine.dev"
                             value={form.values.email}
@@ -81,9 +128,11 @@ export default function Register() {
                             error={form.errors.email && 'Invalid email'}
                             radius="md"
                         />
+                        {mutation.isError && <Text color="red">Email already exists</Text>}
 
                         <PasswordInput
                             required
+                            name="password"
                             label="Password"
                             placeholder="Your password"
                             value={form.values.password}
@@ -91,23 +140,36 @@ export default function Register() {
                             error={form.errors.password && 'Password should include at least 6 characters'}
                             radius="md"
                         />
+                        <PasswordInput
+                            required
+                            name="re_password"
+                            label="Confirm Password"
+                            value={form.values.confirmPassword}
+                            placeholder="Re Enter Your password"
+                            onChange={(event) => form.setFieldValue('confirmPassword', event.currentTarget.value)}
+                            error={form.errors.confirmPassword && 'Passwords are not the same'}
+                            radius="md"
+                        />
 
                     </Stack>
 
                     <Group position="apart" mt="xl">
-                        <Anchor
-                            component="button"
-                            type="button"
-                            color="dimmed"
-                            onClick={() => toggle()}
-                            size="xs"
-                            height="100%"
-                        >
-                        </Anchor>
+                        {/* <Anchor
+                                        component="button"
+                                        type="button"
+                                        color="dimmed"
+                                        onClick={() => toggle()}
+                                        size="xs"
+                                        height="100%"
+                                    >
+                                    </Anchor> */}
                         <Button type="submit" radius="xl">Register</Button>
                     </Group>
+                    {mutation.isSuccess && navigate("/VerificationEmail")}
                 </form>
             </Paper>
+
+
         </Center>
     );
 }

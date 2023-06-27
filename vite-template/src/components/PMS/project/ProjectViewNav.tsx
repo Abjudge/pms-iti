@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useListState, useDisclosure } from '@mantine/hooks';
-import { useLocation } from 'react-router-dom';
 import {
   AppShell,
   Navbar,
   Header,
+  Footer,
+  Aside,
   Text,
   MediaQuery,
   Burger,
@@ -26,17 +28,14 @@ import {
   rem,
   createStyles,
   UnstyledButton,
+  Divider,
+  Flex,
+  Image,
 } from '@mantine/core';
 import { MantineLogo } from '@mantine/ds';
-import { IconPlus, IconChevronDown, IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
-import WorkspaceListNav from './workspace/WorkspaceListNav';
-import WorkspaceViewNav from './workspace/WorkspaceViewNav';
+import { IconPlus, IconPencil, IconChevronDown, IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
 
-import workspacesData from '../../data/workspaces';
-import ProjectViewNav from './project/ProjectViewNav';
-
-
-export default function AppNavbar() {
+export default function ProjectViewNav() {
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [openedModal, { open, close }] = useDisclosure(false);
@@ -120,32 +119,72 @@ export default function AppNavbar() {
     },
 
   }));
-  
- 
-
-
 
   const { classes } = useStyles();
 
-  const { pathname }  = useLocation();
-  if (pathname === '/workspaces') {
-    return (
-      <WorkspaceListNav />
-    )
-  }
-  switch (pathname) {
-    case '/workspaces/workspace':
-      return (
-        <WorkspaceViewNav />
-      )
-      case '/workspaces/workspace/edit':
-        return (
-          <WorkspaceViewNav />
-        )
-    case '/workspaces/workspace/project':
-      return (
-        <ProjectViewNav />
-      )
-}
+  function createWorkspace(e) {
+    e.preventDefault();
 
+    // Read the form data
+    const form = e.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    setWorkspacesList(prevList => [...prevList, data]);
+    close();
+  }
+
+  const navigate = useNavigate();
+
+  function goToWorkspace(e) {
+    console.log(e.target.textContent);
+    navigate(`/workspace/${e.target.textContent}`);
+  }
+
+    // function navigateToEditProject() {
+    //     navigate(`/workspaces/workspace/project/edit`);
+    // }
+
+  const workspaces = workspacesList.map((workspace) => <NavLink fz="lg" color="#868e96" key={workspace} label={workspace.workspaceName} onClick={goToWorkspace} />);
+  console.log(workspaces);
+
+  return (
+
+    <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ md: 700, lg: 300 }}>
+        <Group  >
+        <Flex sx={{ width: '100%' }}
+      mih={50}
+      gap="md"
+      justify="space-between"
+      align="center"
+      direction="row"
+      wrap="wrap"
+    >
+        <Text fz="xl" color="black" >Project name</Text> 
+        <UnstyledButton  size="sm" className={classes.plusButton}>
+          <IconPencil color='gray' />
+        </UnstyledButton>
+      </Flex>
+      </Group>
+        <Divider mt={10} />
+      
+      
+
+      <Navbar.Section grow mx="-xs" px="xs" mt={20}>
+        <Group position="apart" spacing="xs" mb="md">
+            <Text fz="md" color="black" >Start Date</Text>
+            <Text fz="sm" color="black" >1/7/2023</Text>
+        </Group>
+        <Group position="apart" spacing="xs" mb="md">
+            <Text fz="md" color="black" >End Date</Text>
+            <Text fz="sm" color="black" >1/8/2023</Text>
+        </Group>
+      </Navbar.Section>
+
+      
+      
+
+ 
+
+    </Navbar>
+  );
 }

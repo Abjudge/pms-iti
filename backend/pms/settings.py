@@ -177,7 +177,7 @@ DJOSER={
     'PASSWORD_RESET_CONFIRM_URL':'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL':'email/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL':'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL':False,
+    'SEND_ACTIVATION_EMAIL':True,
     'SERIALIZERS':{
         'user_create':'accounts.serializers.UserCreateSerializer',
         'user':'accounts.serializers.UserCreateSerializer',
@@ -191,5 +191,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR/'media'
 MEDIA_URL = '/media/'
 
-
+DOMAIN = "localhost:5173"
+SITE_NAME = "PMS"
 CORS_ALLOW_ALL_ORIGINS = True
