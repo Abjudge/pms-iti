@@ -1,40 +1,11 @@
 import { useState } from 'react';
 import { useListState, useDisclosure } from '@mantine/hooks';
 import { useLocation } from 'react-router-dom';
-import {
-  AppShell,
-  Navbar,
-  Header,
-  Text,
-  MediaQuery,
-  Burger,
-  useMantineTheme,
-  Avatar,
-  Menu,
-  Group,
-  Center,
-  Button,
-  Title,
-  Modal,
-  TextInput,
-  FileInput,
-  Box,
-  Table,
-  Badge,
-  NavLink,
-  ScrollArea,
-  rem,
-  createStyles,
-  UnstyledButton,
-} from '@mantine/core';
-import { MantineLogo } from '@mantine/ds';
-import { IconPlus, IconChevronDown, IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
+import { useMantineTheme, rem, createStyles } from '@mantine/core';
 import WorkspaceListNav from './workspace/WorkspaceListNav';
 import WorkspaceViewNav from './workspace/WorkspaceViewNav';
 
-import workspacesData from '../../data/workspaces';
 import ProjectViewNav from './project/ProjectViewNav';
-
 
 export default function AppNavbar() {
   const theme = useMantineTheme();
@@ -45,7 +16,8 @@ export default function AppNavbar() {
 
   const useStyles = createStyles((theme) => ({
     header: {
-      backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background,
+      backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
+        .background,
       borderBottom: 0,
     },
 
@@ -54,11 +26,9 @@ export default function AppNavbar() {
       cursor: 'pointer',
       '&:hover': {
         borderRadius: theme.radius.xl,
-        backgroundColor:
-          theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
       },
     },
-
 
     inner: {
       height: rem(56),
@@ -68,7 +38,8 @@ export default function AppNavbar() {
     },
 
     links: {
-      [theme.fn.smallerThan('sm')]: { // override default link color
+      [theme.fn.smallerThan('sm')]: {
+        // override default link color
         display: 'none',
       },
     },
@@ -95,8 +66,6 @@ export default function AppNavbar() {
           0.1
         ),
       },
-
-
     },
 
     linkLabel: {
@@ -112,40 +81,23 @@ export default function AppNavbar() {
       },
 
       '&:active': {
-
         backgroundColor: theme.colors.gray[3],
       },
-
-
     },
-
   }));
-  
- 
-
-
 
   const { classes } = useStyles();
 
-  const { pathname }  = useLocation();
+  const { pathname } = useLocation();
   if (pathname === '/workspaces') {
-    return (
-      <WorkspaceListNav />
-    )
+    return <WorkspaceListNav />;
   }
   switch (pathname) {
-    case '/workspaces/workspace':
-      return (
-        <WorkspaceViewNav />
-      )
-      case '/workspaces/workspace/edit':
-        return (
-          <WorkspaceViewNav />
-        )
+    case '/workspaces/workspace/:id':
+      return <WorkspaceViewNav />;
+    case '/workspaces/workspace/edit':
+      return <WorkspaceViewNav />;
     case '/workspaces/workspace/project':
-      return (
-        <ProjectViewNav />
-      )
-}
-
+      return <ProjectViewNav />;
+  }
 }

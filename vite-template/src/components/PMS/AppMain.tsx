@@ -28,7 +28,18 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { MantineLogo } from '@mantine/ds';
-import { IconPlus, IconChevronDown, IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
+import {
+  IconPlus,
+  IconChevronDown,
+  IconSettings,
+  IconSearch,
+  IconPhoto,
+  IconMessageCircle,
+  IconTrash,
+  IconArrowsLeftRight,
+  IconUserCircle,
+  IconLogout2,
+} from '@tabler/icons-react';
 import WorkspaceListMain from './workspace/WorkspaceListMain';
 import WorkspaceViewMain from './workspace/WorkspaceViewMain';
 import WorkspaceEdit from './workspace/WorkspaceEdit';
@@ -43,7 +54,8 @@ export default function AppMain() {
 
   const useStyles = createStyles((theme) => ({
     header: {
-      backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background,
+      backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
+        .background,
       borderBottom: 0,
     },
 
@@ -52,11 +64,9 @@ export default function AppMain() {
       cursor: 'pointer',
       '&:hover': {
         borderRadius: theme.radius.xl,
-        backgroundColor:
-          theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
       },
     },
-
 
     inner: {
       height: rem(56),
@@ -66,7 +76,8 @@ export default function AppMain() {
     },
 
     links: {
-      [theme.fn.smallerThan('sm')]: { // override default link color
+      [theme.fn.smallerThan('sm')]: {
+        // override default link color
         display: 'none',
       },
     },
@@ -93,8 +104,6 @@ export default function AppMain() {
           0.1
         ),
       },
-
-
     },
 
     linkLabel: {
@@ -110,39 +119,23 @@ export default function AppMain() {
       },
 
       '&:active': {
-
         backgroundColor: theme.colors.gray[3],
       },
-
-
     },
-
   }));
 
   const { classes } = useStyles();
 
-
-  const { pathname }  = useLocation();
+  const { pathname } = useLocation();
   if (pathname === '/workspaces') {
-    return (
-      <WorkspaceListMain />
-    )
+    return <WorkspaceListMain />;
   }
   switch (pathname) {
-    case '/workspaces/workspace':
-      return (
-        <WorkspaceViewMain />
-      )
+    case '/workspaces/workspace/:id':
+      return <WorkspaceViewMain />;
     case '/workspaces/workspace/edit':
-      return (
-        <WorkspaceEdit />
-      )
+      return <WorkspaceEdit />;
     case '/workspaces/workspace/project':
-      return (
-        <ProjectViewMain />
-      )
-}
-
+      return <ProjectViewMain />;
   }
-
-
+}
