@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import MyAxios from '../utils/AxiosInstance';
-import { GetWorkSpaces } from '../redux/slices/WorkSpacesSlice';
 
 const TestAxios = () => {
   // alert("test mount");

@@ -1,58 +1,28 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useListState, useDisclosure } from '@mantine/hooks';
 import {
-  AppShell,
-  Navbar,
   Header,
-  Text,
   MediaQuery,
   Burger,
   useMantineTheme,
-  Avatar,
   Menu,
   Group,
   Center,
-  Button,
   Title,
-  Modal,
-  TextInput,
-  FileInput,
-  Box,
-  Table,
-  Badge,
-  NavLink,
-  ScrollArea,
   rem,
   createStyles,
-  UnstyledButton,
+  Text,
 } from '@mantine/core';
 import { MantineLogo } from '@mantine/ds';
-import {
-  IconPlus,
-  IconChevronDown,
-  IconSettings,
-  IconSearch,
-  IconPhoto,
-  IconMessageCircle,
-  IconTrash,
-  IconArrowsLeftRight,
-  IconUserCircle,
-  IconLogout2,
-} from '@tabler/icons-react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { IconChevronDown, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { logout } from '../../redux/slices/TokensSlice';
-import WorkspaceListNav from './workspace/WorkspaceListNav';
+import { useSelector } from 'react-redux';
+import MyAxios from '../../utils/AxiosInstance';
+import { SetWorkSpace } from '../../redux/slices/WorkSpacesSlice';
 
 export default function AppShellDemo() {
-  const theme = useMantineTheme();
-  const [opened, setOpened] = useState(false);
-  const [openedModal, { open, close }] = useDisclosure(false);
-  const [values, handlers] = useListState([{ a: 1 }]);
-  const [workspacesList, setWorkspacesList] = useState([]);
-
-  // const workspaces = useWorkspacesStore((state) => state.workspaces);
-
   const useStyles = createStyles((theme) => ({
     header: {
       backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
@@ -108,7 +78,7 @@ export default function AppShellDemo() {
 
       '&:hover': {
         backgroundColor: theme.fn.lighten(
-          theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background!,
+          theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background,
           0.1
         ),
       },
@@ -131,6 +101,16 @@ export default function AppShellDemo() {
       },
     },
   }));
+
+  const theme = useMantineTheme();
+  const [opened, setOpened] = useState(false);
+  const [openedModal, { open, close }] = useDisclosure(false);
+  const [values, handlers] = useListState([{ a: 1 }]);
+  const tokens = useSelector((state) => state.TokensSlice.tokens);
+  const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
+
+  // const workspaces = useWorkspacesStore((state) => state.workspaces);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { classes } = useStyles();
@@ -139,6 +119,31 @@ export default function AppShellDemo() {
     navigate('/login');
   };
 
+  const fetchData = async () => {
+    // workspaces
+    try {
+      const response = await MyAxios.get('workspaces/', {
+        headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
+      });
+
+      if (response.status == 200) {
+        dispatch(SetWorkSpace(response.data));
+        alert('succeess');
+      } else {
+        alert('failed');
+      }
+    } catch (error) {
+      alert('fetch error ');
+    }
+  };
+  useEffect(() => {
+    fetchData();
+    // trying();
+  }, []);
+  function goToWorkspace(id) {
+    console.log(id);
+    navigate(`/workspaces/workspace/${id}`);
+  }
   // get user's first and last name from api
   const first_name = 'Mahmoud';
   const last_name = 'Tarek';
@@ -185,6 +190,21 @@ export default function AppShellDemo() {
 
             <Menu.Dropdown>
               <Menu.Label>Your workspaces</Menu.Label>
+
+              {workspaces ? (
+                workspaces.map((workspace) => (
+                  <>
+                    <Menu.Item onClick={() => goToWorkspace(workspace.id)}>
+                      {workspace.name}
+                    </Menu.Item>
+                    {/* <img src={baseURL + workspace.image} height="400px" alt="dfsgfdsgfd" /> */}
+                  </>
+                ))
+              ) : (
+                <Text color="gray" fz="sm">
+                  No workspaces yet, hit the plus button to create one.
+                </Text>
+              )}
               {/* {workspaces.length ? workspaces : <Text fz="xs"> No workspaces yet.</Text>} */}
             </Menu.Dropdown>
           </Menu>
@@ -206,7 +226,12 @@ export default function AppShellDemo() {
             </Menu.Target>
 
             <Menu.Dropdown>
-              <Menu.Label>Your workspaces</Menu.Label>
+              <Menu.Label>Your projects</Menu.Label>
+
+              <Text color="gray" fz="sm">
+                No workspaces yet, hit the plus button to create one.
+              </Text>
+
               {/* {workspaces.length ? workspaces : <Text fz="xs"> No workspaces yet.</Text>} */}
             </Menu.Dropdown>
           </Menu>
