@@ -27,7 +27,18 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { MantineLogo } from '@mantine/ds';
-import { IconPlus, IconChevronDown, IconSettings, IconSearch, IconPhoto, IconMessageCircle, IconTrash, IconArrowsLeftRight, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
+import {
+  IconPlus,
+  IconChevronDown,
+  IconSettings,
+  IconSearch,
+  IconPhoto,
+  IconMessageCircle,
+  IconTrash,
+  IconArrowsLeftRight,
+  IconUserCircle,
+  IconLogout2,
+} from '@tabler/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../../redux/slices/TokensSlice';
@@ -44,7 +55,8 @@ export default function AppShellDemo() {
 
   const useStyles = createStyles((theme) => ({
     header: {
-      backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor }).background,
+      backgroundColor: theme.fn.variant({ variant: 'filled', color: theme.primaryColor })
+        .background,
       borderBottom: 0,
     },
 
@@ -53,18 +65,16 @@ export default function AppShellDemo() {
       cursor: 'pointer',
       '&:hover': {
         borderRadius: theme.radius.xl,
-        backgroundColor:
-          theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
+        backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[2],
       },
     },
 
     userName: {
-      color: "white",
-      backgroundColor: "#339af0",
+      color: 'white',
+      backgroundColor: '#339af0',
       padding: 7,
-      borderRadius: "50%"
+      borderRadius: '50%',
     },
-
 
     inner: {
       height: rem(56),
@@ -74,7 +84,8 @@ export default function AppShellDemo() {
     },
 
     links: {
-      [theme.fn.smallerThan('sm')]: { // override default link color
+      [theme.fn.smallerThan('sm')]: {
+        // override default link color
         display: 'none',
       },
     },
@@ -101,8 +112,6 @@ export default function AppShellDemo() {
           0.1
         ),
       },
-
-
     },
 
     linkLabel: {
@@ -118,13 +127,9 @@ export default function AppShellDemo() {
       },
 
       '&:active': {
-
         backgroundColor: theme.colors.gray[3],
       },
-
-
     },
-
   }));
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -135,13 +140,20 @@ export default function AppShellDemo() {
   };
 
   // get user's first and last name from api
-  const first_name = "Mahmoud";
-  const last_name = "Tarek"
-  const userName = first_name.charAt(0).toUpperCase() + last_name.charAt(0).toUpperCase()
-
+  const first_name = 'Mahmoud';
+  const last_name = 'Tarek';
+  const userName = first_name.charAt(0).toUpperCase() + last_name.charAt(0).toUpperCase();
+  alert('app header mounted');
   return (
     <Header height={{ base: 50, md: 70 }} p="md">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '100%' }}>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          height: '100%',
+        }}
+      >
         <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
           <Burger
             opened={opened}
@@ -155,8 +167,13 @@ export default function AppShellDemo() {
           <MantineLogo size={34} />
         </Group>
         <Group>
-
-          <Menu shadow="md" width={200} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
+          <Menu
+            shadow="md"
+            width={200}
+            trigger="hover"
+            transitionProps={{ exitDuration: 0 }}
+            withinPortal
+          >
             <Menu.Target>
               <a className={classes.link}>
                 <Center>
@@ -172,7 +189,13 @@ export default function AppShellDemo() {
             </Menu.Dropdown>
           </Menu>
 
-          <Menu shadow="md" width={200} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
+          <Menu
+            shadow="md"
+            width={200}
+            trigger="hover"
+            transitionProps={{ exitDuration: 0 }}
+            withinPortal
+          >
             <Menu.Target>
               <a className={classes.link}>
                 <Center>
@@ -187,24 +210,24 @@ export default function AppShellDemo() {
               {/* {workspaces.length ? workspaces : <Text fz="xs"> No workspaces yet.</Text>} */}
             </Menu.Dropdown>
           </Menu>
-
-
         </Group>
-        <Group className={classes.avatar} >
-          <Menu shadow="md" width={200} >
-            <Menu.Target >
-              <Title order={5} className={classes.userName}>{userName}</Title>
+        <Group className={classes.avatar}>
+          <Menu shadow="md" width={200}>
+            <Menu.Target>
+              <Title order={5} className={classes.userName}>
+                {userName}
+              </Title>
             </Menu.Target>
 
             <Menu.Dropdown>
               <Menu.Item icon={<IconUserCircle size={14} />}>Profile</Menu.Item>
-              <Menu.Item onClick={handleLogout} icon={<IconLogout2 size={14} />}>Logout</Menu.Item>
+              <Menu.Item onClick={handleLogout} icon={<IconLogout2 size={14} />}>
+                Logout
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
-
         </Group>
-
       </div>
     </Header>
-  )
+  );
 }

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import MyAxios from '../../utils/AxiosInstance';
 const initialState = {
-  workspaces: {},
+  workspaces: [],
   fetched: false,
 };
 
