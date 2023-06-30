@@ -2,7 +2,7 @@ import json
 import requests
 import re
 gh_user ="abjudge"
-gh_token ="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"
+gh_token ="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"
 def gh_sesh(user, token):
     s = requests.Session()
     s.auth = (user, token)

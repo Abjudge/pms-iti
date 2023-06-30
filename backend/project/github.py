@@ -5,7 +5,7 @@ import re
 
 # Your GitHub username and access token
 username = "abjudge"
-access_token = "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"
+access_token = "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"
 # Set up request headers with access token
 url = "https://api.github.com"
 headers = {
@@ -44,7 +44,7 @@ def create_repo(repo_name):
         if response.status_code == 201:
             data = response.json()
             clone_url = data['clone_url']
-            print(data)
+            repo_name = data['name']
             return clone_url,repo_name
         else:
             print(f"Error creating repository: {response.status_code} {response.reason}")

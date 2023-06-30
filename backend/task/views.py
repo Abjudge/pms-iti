@@ -37,9 +37,13 @@ def TaskCreate(request):
     user_id= request.user.id
     request.data['owner_id']=user_id
     name=request.data['name']
-    repo_name= Project.objects.get(id=request.data['project_id']).repo_name
-    sha = github.get_branch_sha(github.gh_user, github.gh_token, repo_name)
-    new_sync_branch=github.create_new_branch(github.gh_user, github.gh_token, sha,name ,repo_name)
+    repo= Project.objects.get(id=request.data['project_id'])
+    rep_name=repo.repo_name
+    print(rep_name)
+    print("*******************************************************")
+    sha = github.get_branch_sha(github.gh_user, github.gh_token, rep_name)
+    print(sha)
+    new_sync_branch=github.create_new_branch(github.gh_user, github.gh_token, sha,name ,rep_name)
     request.data['github_branch_name']=new_sync_branch['ref'].split('/')[2]
     serializer = TaskSerializer(data=request.data)
     if serializer.is_valid():
