@@ -44,13 +44,6 @@ const TokensSlice = createSlice({
     setRunningInterval: (state, action) => {
       if (!state.loggedin) {
         state.running_interval = action.payload;
-        console.log(
-          '///////////////////////////////////////////////////////////////////////////////'
-        );
-        console.log(
-          '🚀 ~ file: TokensSlice.jsx:89 ~ state.running_interval:',
-          state.running_interval
-        );
       } else {
         alert('there is another interval running');
       }
@@ -95,17 +88,10 @@ const TokensSlice = createSlice({
     });
     builder.addCase(refreshTokens.fulfilled, (state, action) => {
       state.tokens.access = action.payload.access;
-      console.log(
-        '🚀 ~ file: TokensSlice.jsx:88 ~ builder.addCase ~ action.payload.access:',
-        action.payload.access
-      );
-      console.log('*******************************************************************');
+
       state.auth = true;
       const { user_id } = jwt_decode(state.tokens.access);
-      console.log(
-        '🚀 ~ file: TokensSlice.jsx:142 ~ builder.addCase ~ state.tokens.access:',
-        state.tokens.access
-      );
+
       state.user.user_id = user_id;
       state.loggedin = true;
       state.full = true;
@@ -122,8 +108,6 @@ const TokensSlice = createSlice({
 
         TokensSlice.caseReducers.logout(state, action);
       }
-      console.log('🚀 ~ file: TokensSlice.jsx:115 ~ builder.addCase ~ action:', action);
-      console.log('🚀 ~ file: TokensSlice.jsx:115 ~ builder.addCase ~ action:', action.error);
       alert('failed to refresh');
     });
   },

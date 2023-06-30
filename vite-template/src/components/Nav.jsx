@@ -37,7 +37,6 @@ const Nav = () => {
             const interval = setInterval(() => {
                 dispatch(refreshTokens(tokens_from_local_Storage.refresh));
             }, intervaltime);
-            console.log('IIIiIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
 
             dispatch(setRunningInterval(interval));
         } else {

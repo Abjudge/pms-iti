@@ -102,7 +102,7 @@ export default function WorkspaceListNav() {
   const tokens = useSelector((state) => state.TokensSlice.tokens);
   const user = useSelector((state) => state.TokensSlice.user);
   const baseURL = useSelector((state) => state.TokensSlice.baseURL);
-
+  console.log(workspaces[0]);
   const dispatch = useDispatch();
 
   const { classes } = useStyles();

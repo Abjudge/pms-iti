@@ -129,12 +129,12 @@ export default function AppShellDemo() {
 
       if (response.status == 200) {
         dispatch(SetWorkSpace(response.data));
-        alert('succeess');
+        // alert('succeess');
       } else {
-        alert('failed');
+        // alert('failed');
       }
     } catch (error) {
-      alert('fetch error ');
+      // alert('fetch error ');
     }
   };
   const fetchUserData = async () => {
@@ -149,12 +149,15 @@ export default function AppShellDemo() {
           response.data.first_name.charAt(0).toUpperCase() +
             response.data.last_name.charAt(0).toUpperCase()
         ); // dispatch(SetWorkSpace(response.data));
-        alert('succeess222');
+
+        console.log('sucess'); // alert('succeess222');
       } else {
-        alert('failed222');
+        console.log('failed'); // alert('succeess222');
+
+        // alert('failed222');
       }
     } catch (error) {
-      alert('fetch error22 ');
+      // alert('fetch error22 ');
     }
   };
   useEffect(() => {
@@ -170,7 +173,7 @@ export default function AppShellDemo() {
   // const first_name = 'Mahmoud';
   // const last_name = 'Tarek';
   // const userName = first_name.charAt(0).toUpperCase() + last_name.charAt(0).toUpperCase();
-  alert('app header mounted');
+  // alert('app header mounted');
   return (
     <Header height={{ base: 50, md: 70 }} p="md">
       <div
