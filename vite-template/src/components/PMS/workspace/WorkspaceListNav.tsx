@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useListState, useDisclosure } from '@mantine/hooks';
+import { useMutation, useQueryClient} from '@tanstack/react-query';
+import useWorkspaces from './GetWorkspaces';
+
 import {
   Navbar,
   Text,
@@ -18,8 +21,9 @@ import {
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { AddWorkSpace } from '../../../redux/slices/WorkSpacesSlice';
+// import { AddWorkSpace } from '../../../redux/slices/WorkSpacesSlice';
 import MyAxios from '../../../utils/AxiosInstance';
+import WorkspaceViewNav from './WorkspaceViewNav';
 
 export default function WorkspaceListNav() {
   const useStyles = createStyles((theme) => ({
@@ -93,12 +97,11 @@ export default function WorkspaceListNav() {
       },
     },
   }));
-
   const [opened, setOpened] = useState(false);
   const [openedModal, { open, close }] = useDisclosure(false);
   const [values, handlers] = useListState([{ a: 1 }]);
   // const [workspacesList, setWorkspacesList] = useState([]);
-  const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
+  // const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
   const tokens = useSelector((state) => state.TokensSlice.tokens);
   const user = useSelector((state) => state.TokensSlice.user);
   const baseURL = useSelector((state) => state.TokensSlice.baseURL);
@@ -107,46 +110,58 @@ export default function WorkspaceListNav() {
 
   const { classes } = useStyles();
 
-  async function createWorkspace(e) {
-    // console.log(
-    //   '🚀 ~ file: WorkspaceListNav.tsx:128 ~ createWorkspace ~ e.target.image:',
-    //   e.target.image
-    // );
-    // console.log(
-    //   '🚀 ~ file: WorkspaceListNav.tsx:128 ~ createWorkspace ~ e.target.image:',
-    //   e.target.image.value
-    // );
+  const queryClient = useQueryClient();
+
+
+
+
+console.log("user", tokens);
+
+const addWorkspace = (workspace) => {
+  return MyAxios.post('workspaces/Add', workspace, { headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' }})
+}
+
+
+const createWorkspaceMutation = useMutation(addWorkspace, {
+  // onSuccess: () => {
+  //   queryClient.invalidateQueries('workspaces');
+  // },
+
+  onSuccess: (newData) => {
+   queryClient.setQueryData(['workspaces'], 
+   (oldData) => {
+    console.log("old", oldData);
+    return oldData ? [...oldData, newData.data] : [newData.data]
+  },
+
+   ); 
+  },
+});
+
+ function createWorkspace(e) {
 
     alert('run create');
 
     e.preventDefault();
-    // Read the form data
-    const response = await MyAxios.post(
-      'workspaces/Add',
-      {
+    createWorkspaceMutation.mutate({
         name: e.target.name.value,
         description: e.target.description.value,
         image: e.target.image.files[0],
         owner_id: user.user_id,
-      },
-      {
-        headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' },
-      }
+    },
     );
+    
 
-    if (response.status == 200) {
-      dispatch(AddWorkSpace(response.data));
-    } else {
-      alert('not succss');
-    }
-    // setWorkspacesList((prevList) => [...prevList, data]);
     close();
   }
   const navigate = useNavigate();
   function goToWorkspace(id) {
-    console.log(id);
     navigate(`/workspaces/workspace/${id}`);
   }
+
+  const { data, error, isLoading } = useWorkspaces();
+
+
 
   return (
     <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ md: 700, lg: 300 }}>
@@ -201,9 +216,9 @@ export default function WorkspaceListNav() {
 
       <Navbar.Section grow component={ScrollArea} mx="-xs" px="xs">
         <Group position="apart" spacing="xs" mb="md">
-          {workspaces ? (
-            workspaces.map((workspace) => (
-              <>
+          {data ? (
+            data.map((workspace) => (
+       
                 <NavLink
                   fz="lg"
                   color="#868e96"
@@ -211,8 +226,8 @@ export default function WorkspaceListNav() {
                   label={workspace.name}
                   onClick={() => goToWorkspace(workspace.id)}
                 />
-                {/* <img src={baseURL + workspace.image} height="400px" alt="dfsgfdsgfd" /> */}
-              </>
+                // {/* <img src={baseURL + workspace.image} height="400px" alt="dfsgfdsgfd" /> */}
+      
             ))
           ) : (
             <Text color="gray" fz="sm">

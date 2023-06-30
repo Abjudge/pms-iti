@@ -145,9 +145,9 @@ STATICFILES_DIRS=[os.path.join(BASE_DIR,'build','static')]
 STATIC_ROOT=os.path.join(BASE_DIR,'static')
 
 REST_FRAMEWORK={
-    'DEFAULT_PERMISSION_CLASSES':[
+    'DEFAULT_PERMISSION_CLASSES':(
         'rest_framework.permissions.IsAuthenticated',
-    ],
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES':(
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         ),
@@ -176,7 +176,7 @@ DJOSER={
     'SET_PASSWORD_RETYPE':True,
     'PASSWORD_RESET_CONFIRM_URL':'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL':'email/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL':'activate/{uid}/{token}',
+    'ACTIVATION_URL':'user_activation/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL':True,
     'SERIALIZERS':{
         'user_create':'accounts.serializers.UserCreateSerializer',

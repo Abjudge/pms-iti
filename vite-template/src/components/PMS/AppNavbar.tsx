@@ -4,10 +4,16 @@ import { useLocation } from 'react-router-dom';
 import { useMantineTheme, rem, createStyles } from '@mantine/core';
 import WorkspaceListNav from './workspace/WorkspaceListNav';
 import WorkspaceViewNav from './workspace/WorkspaceViewNav';
-
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import ProjectViewNav from './project/ProjectViewNav';
+import { SetWorkSpace } from '../../redux/slices/WorkSpacesSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import PrivateRoute from './utils/PrivateRoute';
 
 export default function AppNavbar() {
+  const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
+  console.log(workspaces);
+  console.log(workspaces.id);
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [openedModal, { open, close }] = useDisclosure(false);
@@ -89,11 +95,13 @@ export default function AppNavbar() {
   const { classes } = useStyles();
 
   const { pathname } = useLocation();
+  const workspaceID = pathname?.split("/")?.at(-1);
+  console.log("id", workspaceID);
   if (pathname === '/workspaces') {
     return <WorkspaceListNav />;
   }
   switch (pathname) {
-    case '/workspaces/workspace/:id':
+    case `/workspaces/workspace/${workspaceID}`:
       return <WorkspaceViewNav />;
     case '/workspaces/workspace/edit':
       return <WorkspaceViewNav />;

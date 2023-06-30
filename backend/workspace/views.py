@@ -89,15 +89,23 @@ def AddWorkspace(request):
 
 
 @api_view(['GET'])
-def ListWorkspace(request,id=None):
+def ListWorkspace(request):
+    data=Workspace.objects.all().filter(owner_id=request.user.id)
+    print("data")
+    print(data)
+    dataserlized=Workspaceserializer(data,many=True)
+    return Response(status=HTTP_200_OK, data= dataserlized.data)
+    
+    """
     if(id is not None):
-        data=get_object_or_404(Workspace,id=id)
+        data=get_object_or_404(Workspace,owner_id=request.user.id)
         dataserlized=Workspaceserializer(data)
         return Response(status=HTTP_200_OK, data= dataserlized.data)
     else:
         data=Workspace.objects.all()
         dataserlized=Workspaceserializer(data,many=True)
         return Response(status=HTTP_200_OK,data=dataserlized.data)
+    """
 
 
 

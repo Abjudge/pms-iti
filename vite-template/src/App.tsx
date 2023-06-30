@@ -8,6 +8,9 @@ import Register from './components/Register';
 import { Container, AppShell } from '@mantine/core';
 import PageNotFound from './components/PageNotFound';
 import MainAppShell from './components/PMS/MainAppShell';
+import AppHeader from './components/PMS/AppHeader';
+import AppNavbar from './components/PMS/AppNavbar';
+import AppMain from './components/PMS/AppMain';
 import ActivateAccount from './components/ActivateAccount';
 import VerificationEmailSent from './components/VerificationEmailSent';
 import TestAxios from './components/TestAxios';
@@ -20,6 +23,7 @@ export default function App() {
 
     <MantineProvider withGlobalStyles withNormalizeCSS>
       <Nav />
+      
 
       <Routes>
         <Route path="/user_activation/:uid/:token" element={<ActivateAccount />} />
@@ -48,31 +52,35 @@ export default function App() {
               <MainAppShell />
             </PrivateRoute>
           }
-        />
-        <Route
-          path="/workspaces/workspace/:id"
-          element={
-            <PrivateRoute>
-              <MainAppShell />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/workspaces/workspace/edit"
-          element={
-            <PrivateRoute>
-              <MainAppShell />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/workspaces/workspace/project"
-          element={
-            <PrivateRoute>
-              <MainAppShell />
-            </PrivateRoute>
-          }
-        />
+        >
+            <Route
+              path="/workspaces/workspace/:id"
+              element={
+                <PrivateRoute>
+                  <AppNavbar />
+                  <AppMain />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/workspaces/workspace/edit"
+              element={
+                <PrivateRoute>
+                  <AppNavbar />
+                  <AppMain />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/workspaces/workspace/project"
+              element={
+                <PrivateRoute>
+                  <AppNavbar />
+                  <AppMain />
+                </PrivateRoute>
+              }
+            />
+        </Route>
         <Route
           path="*"
           element={
