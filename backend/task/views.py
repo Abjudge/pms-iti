@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -37,18 +38,21 @@ def TaskCreate(request):
     user_id= request.user.id
     request.data['owner_id']=user_id
     name=request.data['name']
-    repo= Project.objects.get(id=request.data['project_id'])
-    rep_name=repo.repo_name
-    print(rep_name)
-    print("*******************************************************")
-    sha = github.get_branch_sha(github.gh_user, github.gh_token, rep_name)
-    print(sha)
-    new_sync_branch=github.create_new_branch(github.gh_user, github.gh_token, sha,name ,rep_name)
-    request.data['github_branch_name']=new_sync_branch['ref'].split('/')[2]
+    project= Project.objects.get(id=request.data['project_id'])
+    workspace=Workspace.objects.get(id=project.workspace_id.id)
+    if workspace.integrate!=False:
+        if  workspace.token==None or workspace.token=='' or workspace.user_name==None or workspace.user_name=='':
+            return Response(status=HTTP_406_NOT_ACCEPTABLE,data={"detail":"please add github token and username to your workspace"})   
+        
+        sha = github.get_branch_sha(workspace.user_name, workspace.token, project.repo_name)
+        new_sync_branch=github.create_new_branch(workspace.user_name, workspace.token, sha,name ,project.repo_name)
+        request.data['github_branch_name']=new_sync_branch['ref'].split('/')[2]
+
     serializer = TaskSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data,status=HTTP_201_CREATED)
+    
     return Response(serializer.errors,status=HTTP_400_BAD_REQUEST)
 
 
@@ -74,8 +78,11 @@ def TaskUpdate(request,id):
     else:
 
         task=get_object_or_404(Task,id=id)
+        if task.status=='d':
+            request.data['actual_end_date']=datetime.now()
         serializer = TaskSerializer(instance= task,data=request.data)
         if serializer.is_valid():
+        
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors,status=HTTP_400_BAD_REQUEST)

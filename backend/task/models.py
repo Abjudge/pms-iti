@@ -20,7 +20,7 @@ class Task (models.Model):
     start_date = models.DateTimeField()
     end_date = models.DateTimeField()
     estimated_duration = models.FloatField()
-    actual_end_date = models.DateTimeField()
+    actual_end_date = models.DateTimeField(blank=True)
     status =models.CharField(max_length=1,choices=task_status,default='t')
     project_id = models.ForeignKey('project.Project', on_delete=models.CASCADE)
     developer_id = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE ,related_name='developer')

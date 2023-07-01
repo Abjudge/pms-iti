@@ -9,6 +9,7 @@ urlpatterns = [
     path('<int:ws_id>/addmember' , addMember),
     path('members/deleteMember/<int:id>' , deleteMember),
     path('<int:ws_id>/members' ,listMembers ),
-    path('members/updatemember/<int:id>' ,updateMember )
+    path('members/updatemember/<int:id>' ,updateMember ),
+    path('searchmembers/<str:name>',searchmember,name='searchusers')
 
 ]

@@ -5,14 +5,11 @@ import re
 
 # Your GitHub username and access token
 username = "abjudge"
-access_token = "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"
+
 # Set up request headers with access token
 url = "https://api.github.com"
-headers = {
-    "Authorization": f"token {access_token}",
-    "Accept": "application/vnd.github.v3+json"
-}
-header =   {'Authorization': access_token}
+
+
 
 def validate_repo_name(name):
     if len(name) < 1 or len(name) > 100:
@@ -23,7 +20,7 @@ def validate_repo_name(name):
         return False
     return True
 
-def create_repo(repo_name):
+def create_repo(repo_name,access_token):
     repo_name = repo_name.strip().replace(" ", "-").lower()
     if not validate_repo_name(repo_name):
         print("Invalid repository name.")
@@ -38,7 +35,10 @@ def create_repo(repo_name):
             "license_template": "mit",
             "default_branch": "main"
         }
-
+        headers = {
+                    "Authorization": f"token {access_token}",
+                    "Accept": "application/vnd.github.v3+json"
+                    }       
         response = requests.post(f"{url}/user/repos", headers=headers, data=json.dumps(payload))
         print(f"Response: {response.status_code} {response.reason}")
         if response.status_code == 201:
