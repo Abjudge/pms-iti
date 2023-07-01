@@ -54,7 +54,7 @@ export default function App() {
           }
         >
             <Route
-              path="/workspaces/workspace/:id"
+              path="/workspaces/workspace/:workspaceId"
               element={
                 <PrivateRoute>
                   <AppNavbar />
@@ -72,7 +72,7 @@ export default function App() {
               }
             />
             <Route
-              path="/workspaces/workspace/project"
+              path="/workspaces/workspace/:workspaceId/project/:projectId"
               element={
                 <PrivateRoute>
                   <AppNavbar />
