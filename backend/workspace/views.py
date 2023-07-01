@@ -8,7 +8,7 @@ from django.shortcuts import  get_object_or_404
 from rest_framework.parsers import MultiPartParser,FormParser
 import os
 from django.conf import settings
-
+from accounts.serializers import UserSerializer
 
 @api_view(['DELETE'])
 def DeleteWorkspace(req,id):
@@ -68,17 +68,8 @@ def AddWorkspace(request):
     data['owner_id']=request.data["owner_id"]
     data['name']=request.data["name"]
     data['description']=request.data["description"]
-
-    print("*******************************************************")
-
-    # data = {**request.data, 'owner_id': owner_id  ,'image':image} 
-    # data[image]=request.FILES('image')
-    # print(data)
     item=Workspaceserializer(data=data)
-    print("*******************************************************")
-    print(item)
-    print(item.is_valid())
-    print(item.errors)
+
     if(item.is_valid()):
         item.save()
         return  Response(status=HTTP_200_OK,data=item.data)
@@ -87,28 +78,23 @@ def AddWorkspace(request):
 
 
 
-
 @api_view(['GET'])
 def ListWorkspace(request):
-    data=Workspace.objects.all().filter(owner_id=request.user.id)
-    print("data")
-    print(data)
-    dataserlized=Workspaceserializer(data,many=True)
-    return Response(status=HTTP_200_OK, data= dataserlized.data)
+    owner_workspaces=Workspace.objects.all().filter(owner_id=request.user.id)
+    member_workspaces=WorkspaceMember.objects.all().filter(user_id=request.user.id)
+    for i in owner_workspaces:
+        Workspace_id=[] 
+        Workspace_id.append(i.id)
+    for j in member_workspaces:
+        if j.Workspace_id.id not in Workspace_id:
+            Workspace_id.append(j.Workspace_id.id)
+            print(j.Workspace_id.id)
+            workspace_member=Workspace.objects.all().filter(id=j.Workspace_id.id)
+            owner_workspaces=owner_workspaces |workspace_member
+    dataserlized=Workspaceserializer(owner_workspaces,many=True)
+
+    return Response(status=HTTP_200_OK, data= dataserlized.data  )
     
-    """
-    if(id is not None):
-        data=get_object_or_404(Workspace,owner_id=request.user.id)
-        dataserlized=Workspaceserializer(data)
-        return Response(status=HTTP_200_OK, data= dataserlized.data)
-    else:
-        data=Workspace.objects.all()
-        dataserlized=Workspaceserializer(data,many=True)
-        return Response(status=HTTP_200_OK,data=dataserlized.data)
-    """
-
-
-
 
 
 @api_view(['POST'])
@@ -126,7 +112,7 @@ def addMember(request,ws_id):
           
     else:
     # print(request.data['Workspace_id'])
-        print('*************************************')    
+        
         memberserialized= WorkspaceMemberserializer(data=data)
         if memberserialized.is_valid():
             memberserialized.save()
@@ -154,7 +140,12 @@ def updateMember(request, id):
         return Response(status=HTTP_200_OK, data=serializer.data)
     return Response(status=HTTP_400_BAD_REQUEST, data={"detail": serializer.errors})
 
-        
-   
-         
 
+@api_view(['GET'])
+def searchmember(request,name):
+    users=UserAccount.objects.filter(email__contains=name)
+    if users:
+        serializer = UserSerializer(users, many=True)
+        return Response(status=HTTP_200_OK, data=serializer.data)
+    else:
+        return Response(status=HTTP_400_BAD_REQUEST, data={"detail": "no users found"})

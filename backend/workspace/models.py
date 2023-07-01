@@ -3,9 +3,13 @@ from accounts.models import UserAccount
 # Create your models here.
 class Workspace(models.Model):
     name=models.CharField(max_length=50)
-    description=models.CharField(max_length=250)
-    image=models.ImageField(upload_to='images/')
+    description=models.CharField(max_length=250,blank=True)
+    image=models.ImageField(upload_to='images/',blank=True)
     owner_id = models.ForeignKey('accounts.UserAccount', on_delete=models.CASCADE)
+    integrate=models.BooleanField(default=False,blank=True)
+    user_name=models.CharField(max_length=50,blank=True)
+    token=models.CharField(max_length=50,blank=True)
+    
     def __str__(self):
         return self.name
 
