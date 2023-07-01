@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useListState, useDisclosure } from '@mantine/hooks';
-import { useMutation, useQueryClient} from '@tanstack/react-query';
-import useWorkspaces from './GetWorkspaces';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDispatch, useSelector } from 'react-redux';
+// import { AddWorkSpace } from '../../../redux/slices/WorkSpacesSlice';
+import MyAxios from '../../../utils/AxiosInstance';
+import useWorkspaces from '../queries/GetWorkspaces';
 
 import {
   Navbar,
@@ -20,10 +23,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
-import { useDispatch, useSelector } from 'react-redux';
-// import { AddWorkSpace } from '../../../redux/slices/WorkSpacesSlice';
-import MyAxios from '../../../utils/AxiosInstance';
-import WorkspaceViewNav from './WorkspaceViewNav';
+
 
 export default function WorkspaceListNav() {
   const useStyles = createStyles((theme) => ({
@@ -99,38 +99,32 @@ export default function WorkspaceListNav() {
   }));
   const [opened, setOpened] = useState(false);
   const [openedModal, { open, close }] = useDisclosure(false);
-  const [values, handlers] = useListState([{ a: 1 }]);
   // const [workspacesList, setWorkspacesList] = useState([]);
   // const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
   const tokens = useSelector((state) => state.TokensSlice.tokens);
   const user = useSelector((state) => state.TokensSlice.user);
-  const baseURL = useSelector((state) => state.TokensSlice.baseURL);
 
   const dispatch = useDispatch();
 
   const { classes } = useStyles();
 
-  const queryClient = useQueryClient();
 
 
 
 
-console.log("user", tokens);
+// console.log("user", tokens);
 
 const addWorkspace = (workspace) => {
   return MyAxios.post('workspaces/Add', workspace, { headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' }})
 }
 
 
-const createWorkspaceMutation = useMutation(addWorkspace, {
-  // onSuccess: () => {
-  //   queryClient.invalidateQueries('workspaces');
-  // },
+const queryClient = useQueryClient();
 
+const createWorkspaceMutation = useMutation(addWorkspace, {
   onSuccess: (newData) => {
    queryClient.setQueryData(['workspaces'], 
    (oldData) => {
-    console.log("old", oldData);
     return oldData ? [...oldData, newData.data] : [newData.data]
   },
 
@@ -139,9 +133,6 @@ const createWorkspaceMutation = useMutation(addWorkspace, {
 });
 
  function createWorkspace(e) {
-
-    alert('run create');
-
     e.preventDefault();
     createWorkspaceMutation.mutate({
         name: e.target.name.value,
@@ -155,11 +146,11 @@ const createWorkspaceMutation = useMutation(addWorkspace, {
     close();
   }
   const navigate = useNavigate();
-  function goToWorkspace(id) {
-    navigate(`/workspaces/workspace/${id}`);
+  function goToWorkspace(workspaceID) {
+    navigate(`/workspaces/workspace/${workspaceID}`);
   }
 
-  const { data, error, isLoading } = useWorkspaces();
+  const { data: workspaces, error, isLoading } = useWorkspaces();
 
 
 
@@ -168,7 +159,6 @@ const createWorkspaceMutation = useMutation(addWorkspace, {
       <Modal opened={openedModal} onClose={close} title="Create Workspace" centered>
         <form action="" method="post" onSubmit={createWorkspace} encType="multipart/form-data">
           <TextInput
-            key={values.length}
             name="name"
             placeholder="Workspace name"
             label="Workspace name"
@@ -216,8 +206,8 @@ const createWorkspaceMutation = useMutation(addWorkspace, {
 
       <Navbar.Section grow component={ScrollArea} mx="-xs" px="xs">
         <Group position="apart" spacing="xs" mb="md">
-          {data ? (
-            data.map((workspace) => (
+          {workspaces ? (
+            workspaces.map((workspace) => (
        
                 <NavLink
                   fz="lg"

@@ -5,7 +5,7 @@ import re
 
 # Your GitHub username and access token
 username = "abjudge"
-access_token = "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"
+access_token = "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"
 # Set up request headers with access token
 url = "https://api.github.com"
 headers = {

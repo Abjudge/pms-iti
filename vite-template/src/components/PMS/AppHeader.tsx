@@ -1,6 +1,6 @@
 import { useEffect, useState, memo } from 'react';
 import { useListState, useDisclosure } from '@mantine/hooks';
-import useWorkspaces from './workspace/GetWorkspaces';
+import useWorkspaces from './queries/GetWorkspaces';
 import {
   Header,
   MediaQuery,
