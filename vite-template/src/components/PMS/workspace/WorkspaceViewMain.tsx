@@ -79,45 +79,6 @@ import {
           
       ];
 
-    const { data: workspaceMembers, error: workspacceMembersError, isLoading: workspaceMembersLoading } = useWorkspaceMembers(workspaceID);
-    console.log("workspaceMembers", workspaceMembers);
-    const rows = userData.map((item) => (
-      <tr key={item.name}>
-        <td>
-          <Group spacing="sm">
-            <Avatar size={30} src={item.avatar} radius={30} />
-            <Text fz="sm" fw={500}>
-              {item.name}
-            </Text>
-          </Group>
-        </td>
-  
-        <td>
-          <Badge
-            color={jobColors[item.job.toLowerCase()]}
-            variant={theme.colorScheme === 'dark' ? 'light' : 'outline'}
-          >
-            {item.job}
-          </Badge>
-        </td>
-        <td>
-          <Anchor component="button" size="sm">
-            {item.email}
-          </Anchor>
-        </td>
- 
-        <td>
-          <Group spacing={0} position="right">
-            <ActionIcon>
-              <IconPencil size="1rem" stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon color="red">
-              <IconTrash size="1rem" stroke={1.5} />
-            </ActionIcon>
-          </Group>
-        </td>
-      </tr>
-    ));
 
     // search users
   const tokens = useSelector((state) => state.TokensSlice.tokens);
@@ -184,7 +145,46 @@ import {
       close();
     }
 
+    const { data: workspaceMembers, error: workspacceMembersError, isLoading: workspaceMembersLoading } = useWorkspaceMembers(workspaceID);
+    console.log("workspaceMembers", workspaceMembers);
+
+    const rows = userData.map((item) => (
+      <tr key={item.name}>
+        <td>
+          <Group spacing="sm">
+            <Avatar size={30} src={item.avatar} radius={30} />
+            <Text fz="sm" fw={500}>
+              {item.name}
+            </Text>
+          </Group>
+        </td>
+  
+        <td>
+          <Badge
+            color={jobColors[item.job.toLowerCase()]}
+            variant={theme.colorScheme === 'dark' ? 'light' : 'outline'}
+          >
+            {item.job}
+          </Badge>
+        </td>
+        <td>
+          <Anchor component="button" size="sm">
+            {item.email}
+          </Anchor>
+        </td>
  
+        <td>
+          <Group spacing={0} position="right">
+            <ActionIcon>
+              <IconPencil size="1rem" stroke={1.5} />
+            </ActionIcon>
+            <ActionIcon color="red">
+              <IconTrash size="1rem" stroke={1.5} />
+            </ActionIcon>
+          </Group>
+        </td>
+      </tr>
+    ));
 
 
   
