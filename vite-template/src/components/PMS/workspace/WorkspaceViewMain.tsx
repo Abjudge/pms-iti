@@ -25,6 +25,7 @@ import {
   import { IconPencil, IconTrash } from '@tabler/icons-react';
   import { useListState, useDisclosure, useDebouncedValue } from '@mantine/hooks';
   import MyAxios from '../../../utils/AxiosInstance';
+  import useWorkspaceMembers from '../queries/GetWorkspaceMembers';
 
 
 
@@ -77,6 +78,9 @@ import {
           }
           
       ];
+
+    const { data: workspaceMembers, error: workspacceMembersError, isLoading: workspaceMembersLoading } = useWorkspaceMembers(workspaceID);
+    console.log("workspaceMembers", workspaceMembers);
     const rows = userData.map((item) => (
       <tr key={item.name}>
         <td>
@@ -138,8 +142,10 @@ import {
       },
       initialData: [],
   });
-
- console.log("datafdsfdsf", data);
+  let member_id = 0;
+  if (data.length){
+    member_id = data[0].id;
+  }
 
   const params = useParams();
   console.log("params", params);
@@ -148,7 +154,7 @@ import {
 
   
   const addWorkspaceMember = (member) => {
-    return MyAxios.post(`workspaces/${workspaceID}/addmember`, workspace, { headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' }})
+    return MyAxios.post(`workspaces/${workspaceID}/addmember`, member, { headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' }})
   }
   
   
@@ -168,15 +174,18 @@ import {
    function addMember(e) {
       e.preventDefault();
       addWorkspaceMemberMutation.mutate({
-          user_id: user.user_id,
+          user_id: member_id,
           Workspace_id: workspaceID,
-          role : e.target.role.value,
+          role: e.target.role.value,
       },
       );
       
   
       close();
     }
+
+ 
+
 
   
     return (

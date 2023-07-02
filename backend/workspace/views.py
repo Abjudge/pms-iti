@@ -99,7 +99,13 @@ def ListWorkspace(request):
 
 @api_view(['POST'])
 def addMember(request,ws_id):
-
+    
+    print("rooooooooooooooooooooooooole")
+    print(request.data['role'])
+    print("iiiiiiiiiiiiiiiiiiiiiid")
+    print(request.data['user_id'])
+    print("wwiiiiiiiiiiiiiiiiiiiiiiiiiid")
+    print(request.data['Workspace_id'])
     data = request.POST.copy()    
        
     data['Workspace_id']=ws_id
@@ -121,8 +127,8 @@ def addMember(request,ws_id):
 @api_view(['GET'])
 def listMembers(request, ws_id):
     members = WorkspaceMember.objects.filter(Workspace_id=ws_id)
-    serializer = WorkspaceMemberserializer(members, many=True)
-    return Response(status=HTTP_200_OK, data=serializer.data)
+    serializer = WorkspaceMemberSerializer(members, many=True)
+    return Response(serializer.data, status=HTTP_200_OK)
 
 @api_view(['DELETE'])
 def deleteMember(request,id):
