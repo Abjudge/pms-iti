@@ -8,15 +8,17 @@ import Register from './components/Register';
 import { Container, AppShell } from '@mantine/core';
 import PageNotFound from './components/PageNotFound';
 import MainAppShell from './components/PMS/MainAppShell';
-import AppHeader from './components/PMS/AppHeader';
-import AppNavbar from './components/PMS/AppNavbar';
-import AppMain from './components/PMS/AppMain';
 import ActivateAccount from './components/ActivateAccount';
 import VerificationEmailSent from './components/VerificationEmailSent';
 import TestAxios from './components/TestAxios';
 import PrivateRoute from './utils/PrivateRoute';
 import NotLoggedIn from './utils/NotLoggedIn';
 import Nav from './components/Nav';
+import WorkspaceListMain from './components/PMS/workspace/WorkspaceListMain';
+import WorkspaceViewMain from './components/PMS/workspace/WorkspaceViewMain';
+import WorkspaceEdit from './components/PMS/workspace/WorkspaceEdit';
+import ProjectViewMain from './components/PMS/project/ProjectViewMain';
+
 export default function App() {
   return (
     // <ThemeProvider>
@@ -50,6 +52,7 @@ export default function App() {
           element={
             <PrivateRoute>
               <MainAppShell />
+              <WorkspaceListMain />
             </PrivateRoute>
           }
         >
@@ -57,8 +60,7 @@ export default function App() {
               path="/workspaces/workspace/:workspaceId"
               element={
                 <PrivateRoute>
-                  <AppNavbar />
-                  <AppMain />
+                  <WorkspaceViewMain />
                 </PrivateRoute>
               }
             />
@@ -66,8 +68,7 @@ export default function App() {
               path="/workspaces/workspace/edit"
               element={
                 <PrivateRoute>
-                  <AppNavbar />
-                  <AppMain />
+                  <WorkspaceEdit />
                 </PrivateRoute>
               }
             />
@@ -75,8 +76,7 @@ export default function App() {
               path="/workspaces/workspace/:workspaceId/project/:projectId"
               element={
                 <PrivateRoute>
-                  <AppNavbar />
-                  <AppMain />
+                  <ProjectViewMain />
                 </PrivateRoute>
               }
             />

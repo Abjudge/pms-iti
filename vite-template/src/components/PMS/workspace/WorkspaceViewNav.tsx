@@ -172,7 +172,7 @@ export default function WorkspaceViewNav() {
   }
 
 
-  const { data: projects, error: projectsError, isLoading: projectsLoading } = useProjects();
+  const { data: projects, error: projectsError, isLoading: projectsLoading } = useProjects(workspaceID);
 
   console.log("projectsNN", projects);
 

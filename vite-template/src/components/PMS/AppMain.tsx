@@ -131,7 +131,7 @@ export default function AppMain() {
     return <WorkspaceListMain />;
   }
   switch (pathname) {
-    case '/workspaces/workspace/:id':
+    case '/workspaces/workspace/:workspaceId':
       return <WorkspaceViewMain />;
     case '/workspaces/workspace/edit':
       return <WorkspaceEdit />;

@@ -1,4 +1,7 @@
 import { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
     Avatar,
     Badge,
@@ -20,7 +23,10 @@ import {
     Center,
   } from '@mantine/core';
   import { IconPencil, IconTrash } from '@tabler/icons-react';
-  import { useListState, useDisclosure } from '@mantine/hooks';
+  import { useListState, useDisclosure, useDebouncedValue } from '@mantine/hooks';
+  import MyAxios from '../../../utils/AxiosInstance';
+
+
 
 
 
@@ -35,26 +41,7 @@ import {
 
   
   export default function WorkspaceViewMain() {
-    const timeoutRef = useRef<number>(-1);
-  const [value, setValue] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [data, setData] = useState<string[]>([]);
-
-  const handleChange = (val: string) => {
-    window.clearTimeout(timeoutRef.current);
-    setValue(val);
-    setData([]);
-
-    if (val.trim().length === 0 || val.includes('@')) {
-      setLoading(false);
-    } else {
-      setLoading(true);
-      timeoutRef.current = window.setTimeout(() => {
-        setLoading(false);
-        setData(['gmail.com', 'outlook.com', 'yahoo.com'].map((provider) => `${val}@${provider}`));
-      }, 1000);
-    }
-  };
+  
     const theme = useMantineTheme();
     const [openedModal, { open, close }] = useDisclosure(false);
     const userData = [
@@ -127,6 +114,70 @@ import {
         </td>
       </tr>
     ));
+
+    // search users
+  const tokens = useSelector((state) => state.TokensSlice.tokens);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch] = useDebouncedValue(search, 200);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ['userSearch', debouncedSearch],
+    queryFn: () => {
+      if (debouncedSearch.length === 0) {
+        return [];
+      }
+
+       return MyAxios.get(`/workspaces/searchmembers/${debouncedSearch}`, {
+        headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
+      }).then((response) => {
+          if (!response?.data) {
+            return [];
+          }
+          return response.data.map ((item) => ({ value: item.email, id: item.id }));  
+        })
+      },
+      initialData: [],
+  });
+
+ console.log("datafdsfdsf", data);
+
+  const params = useParams();
+  console.log("params", params);
+
+ const workspaceID = params.workspaceId;
+
+  
+  const addWorkspaceMember = (member) => {
+    return MyAxios.post(`workspaces/${workspaceID}/addmember`, workspace, { headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' }})
+  }
+  
+  
+  const queryClient = useQueryClient();
+  
+  const addWorkspaceMemberMutation = useMutation(addWorkspaceMember, {
+    onSuccess: (newData) => {
+     queryClient.setQueryData(['projects'], 
+     (oldData) => {
+      return oldData ? [...oldData, newData.data] : [newData.data]
+    },
+  
+     ); 
+    },
+  });
+  
+   function addMember(e) {
+      e.preventDefault();
+      addWorkspaceMemberMutation.mutate({
+          user_id: user.user_id,
+          Workspace_id: workspaceID,
+          role : e.target.role.value,
+      },
+      );
+      
+  
+      close();
+    }
+
   
     return (
         <Container>
@@ -142,24 +193,25 @@ import {
       <Button onClick={open}>Add Members</Button>
     </Flex>
     <Modal opened={openedModal} onClose={close} title="Add members to workspace" centered>
-        <form action="" method="post">
+        <form action="" method="post" onSubmit={addMember}>
 
         <Autocomplete
-        required
-        value={value}
-        data={data}
-        onChange={handleChange}
-        rightSection={loading ? <Loader size="1rem" /> : null}
-        label="Enter member email"
-        placeholder="Your email"
-    />
-          <NativeSelect
           required
-      data={['Developer', 'Tester']}
-      label="Select member role"
-      withAsterisk
-    />
-     
+          data={data ?? []}
+          value={search}
+          onChange={setSearch}
+          rightSection={isLoading ? <Loader size="1rem" /> : null}
+          label="Enter member email"
+          placeholder="Your email"
+      />
+          <NativeSelect
+            required
+            name="role"
+            data={[{ value: 'd', label: 'Developer' }, { value: 't', label: 'Tester' }]}
+            label="Select member role"
+            withAsterisk
+          />
+          
 
           <Group style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '20px' }}>
 

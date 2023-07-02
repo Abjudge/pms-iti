@@ -2,7 +2,6 @@ import { AppShell, Button, Center, Navbar, Stack, Title } from "@mantine/core";
 import { useLocation, useNavigate, BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import AppHeader from "./AppHeader";
 import AppNavbar from "./AppNavbar";
-import AppMain from "./AppMain";
 import PrivateRoute from '../../utils/PrivateRoute';
 
 export default function MainAppShell() {
@@ -15,8 +14,7 @@ export default function MainAppShell() {
 
       header={<AppHeader />}
       navbar={<AppNavbar />}>
-             
-      <AppMain />
+
       <Outlet />
 
  

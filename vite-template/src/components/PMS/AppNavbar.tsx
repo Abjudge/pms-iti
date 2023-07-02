@@ -94,9 +94,19 @@ export default function AppNavbar() {
 
   const { classes } = useStyles();
 
+
   const { pathname } = useLocation();
+
+
+  
+  if (pathname.includes("/project/")) {
+    return <ProjectViewNav/>
+  }
+
   const workspaceID = pathname?.split("/")?.at(-1);
+
   console.log("id", workspaceID);
+
   if (pathname === '/workspaces') {
     return <WorkspaceListNav />;
   }
@@ -105,7 +115,7 @@ export default function AppNavbar() {
       return <WorkspaceViewNav />;
     case '/workspaces/workspace/edit':
       return <WorkspaceViewNav />;
-    case '/workspaces/workspace/project':
-      return <ProjectViewNav />;
   }
+
+  
 }

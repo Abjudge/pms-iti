@@ -51,12 +51,14 @@ def AddProject(request):
 @api_view(['GET'])
 def ListProject(request,id=None):
     #select all catgory from model
+    print(request.user.id)
+    print(request.GET.get('workspaceId'))
     if(id is not None):
         data=get_object_or_404(Project,id=id)
         dataserlized=Projectselizer(data)
         return Response(status=HTTP_202_ACCEPTED, data= dataserlized.data)
     else:
-        data=Project.objects.all()
+        data=Project.objects.all().filter(workspace_id=request.GET.get('workspaceId'))
         dataserlized=Projectselizer(data,many=True)
         return Response(status=HTTP_207_MULTI_STATUS,data= dataserlized.data)
 

@@ -15,8 +15,6 @@ const useWorkspaces = () => {
       throw new Error('Your error message goes here');
     }
 
-    console.log('here responce', response.data);
-
     return response.data;
   };
 
