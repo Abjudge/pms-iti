@@ -1,6 +1,7 @@
 import { useEffect, useState, memo } from 'react';
 import { useListState, useDisclosure } from '@mantine/hooks';
 import useWorkspaces from './queries/GetWorkspaces';
+import useProjects from './queries/GetProjects';
 import {
   Header,
   MediaQuery,
@@ -172,17 +173,20 @@ function AppHeader() {
 
   
   function goToWorkspace(id) {
-    console.log(id);
     navigate(`/workspaces/workspace/${id}`);
+  }
+
+  // get workspaceId from url
+  const workspaceID = window.location.pathname.split('/')[3];
+  function goToProject(id) {
+    navigate(`/workspaces/workspace/${workspaceID}/project/${id}`);
   }
   // get user's first and last name from api
   // const first_name = 'Mahmoud';
   // const last_name = 'Tarek';
   // const userName = first_name.charAt(0).toUpperCase() + last_name.charAt(0).toUpperCase();
-  const { data, error, isLoading } = useWorkspaces();
-  console.log("data", data);
-  console.log("error", error);
-  console.log("isLoading", isLoading);
+  const { data: workspaces, error, isLoading } = useWorkspaces();
+  const { data: projects, error2, isLoading2 } = useProjects();
   return (
     <Header height={{ base: 50, md: 70 }} p="md">
       <div
@@ -226,8 +230,8 @@ function AppHeader() {
               <Menu.Label>Your workspaces</Menu.Label>
               <Stack spacing="xs" mt="sm" mb="md" style={{overflow: 'scroll', maxHeight: '300px'}}>
 
-              {data ? (
-                data.map((workspace) => (
+              {workspaces ? (
+                workspaces.map((workspace) => (
               
                     <Menu.Item key={workspace.id} onClick={() => goToWorkspace(workspace.id)}>
                       {workspace.name}
@@ -266,10 +270,20 @@ function AppHeader() {
 
               <Stack spacing="xs" mt="sm" mb="md" style={{overflow: 'scroll', maxHeight: '300px'}}>
 
-
-              <Text color="gray" fz="sm">
-                No projects yet, hit the plus button to create one.
-              </Text>
+              {projects ? (
+                projects.map((project) => (
+              
+                    <Menu.Item key={project.id} onClick={() => goToWorkspace(project.id)}>
+                      {project.name}
+                    </Menu.Item>
+                    // {/* <img src={baseURL + workspace.image} height="400px" alt="dfsgfdsgfd" /> */}
+      
+                ))
+              ) : (
+                <Text color="gray" fz="sm">
+                  No workspaces yet, hit the plus button to create one.
+                </Text>
+              )}
 
               </Stack>
 

@@ -21,6 +21,7 @@ import {
   Loader,
   NativeSelect,
   Center,
+  Stack,
 } from '@mantine/core';
 import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { useListState, useDisclosure, useDebouncedValue } from '@mantine/hooks';
@@ -36,6 +37,7 @@ const jobColors: Record<string, string> = {
 export default function WorkspaceViewMain() {
   const theme = useMantineTheme();
   const [openedModal, { open, close }] = useDisclosure(false);
+  const [openedConfirm, { open: openConfirm, close: closeConfirm }] = useDisclosure(false);
   const userData = [
     {
       avatar:
@@ -151,43 +153,11 @@ export default function WorkspaceViewMain() {
   } = useWorkspaceMembers(workspaceID);
   console.log('workspaceMembers', workspaceMembers);
 
-  const rows =
-    workspaceMembers?.map((item) => (
-      <tr key={item.first_name}>
-        <td>
-          <Group spacing="sm">
-            <Text fz="sm" fw={500}>
-              {item.first_name + ' ' + item.last_name}
-            </Text>
-          </Group>
-        </td>
+  function clicked () {
+    console.log('clicked');
+  }
 
-        <td>
-          <Badge
-            color={jobColors[role_conv(item.role).toLowerCase()]}
-            variant={theme.colorScheme === 'dark' ? 'light' : 'outline'}
-          >
-            {role_conv(item.role)}
-          </Badge>
-        </td>
-        <td>
-          <Anchor component="button" size="sm">
-            {item.email}
-          </Anchor>
-        </td>
-
-        <td>
-          <Group spacing={0} position="right">
-            <ActionIcon>
-              <IconPencil size="1rem" stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon color="red">
-              <IconTrash size="1rem" stroke={1.5} />
-            </ActionIcon>
-          </Group>
-        </td>
-      </tr>
-    )) || [];
+  
 
   return (
     <Container>
@@ -235,6 +205,24 @@ export default function WorkspaceViewMain() {
           </Group>
         </form>
       </Modal>
+      <Modal opened={openedConfirm} onClose={closeConfirm}>
+        <Text>Are you sure you want to delete this member?</Text>
+        <Group
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '20px',
+          }}
+        >
+          <Button type="button" onClick={closeConfirm} color="red">
+            Delete
+          </Button>
+          <Button type="button" onClick={closeConfirm} >
+            Cancel
+          </Button>
+        </Group>
+      </Modal>
       <ScrollArea h={500}>
         <Table sx={{ minWidth: 800 }} verticalSpacing="sm">
           <thead>
@@ -246,16 +234,42 @@ export default function WorkspaceViewMain() {
             </tr>
           </thead>
           <tbody>
-            {rows ? (
-              rows
-            ) : (
-              <Center maw={400} h={100} mx="auto">
-                {' '}
-                <Text color="gray" fz="sm">
-                  No members yet, hit the add members button to add members.
-                </Text>{' '}
-              </Center>
-            )}
+          {workspaceMembers?.map((item) => (
+      <tr key={item.first_name}>
+        <td>
+          <Group spacing="sm">
+            <Text fz="sm" fw={500}>
+              {item.first_name + ' ' + item.last_name}
+            </Text>
+          </Group>
+        </td>
+
+        <td>
+          <Badge
+            color={jobColors[role_conv(item.role).toLowerCase()]}
+            variant={theme.colorScheme === 'dark' ? 'light' : 'outline'}
+          >
+            {role_conv(item.role)}
+          </Badge>
+        </td>
+        <td>
+          <Anchor component="button" size="sm">
+            {item.email}
+          </Anchor>
+        </td>
+
+        <td>
+          <Group spacing={0} position="right">
+            <ActionIcon>
+              <IconPencil size="1rem" stroke={1.5} />
+            </ActionIcon>
+            <ActionIcon color="red" onClick={openConfirm}>
+              <IconTrash size="1rem" stroke={1.5} />
+            </ActionIcon>
+          </Group>
+        </td>
+      </tr>
+    )) || []}
           </tbody>
         </Table>
       </ScrollArea>
