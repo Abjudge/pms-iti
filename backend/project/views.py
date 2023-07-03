@@ -51,6 +51,7 @@ def AddProject(request):
 @api_view(['GET'])
 def ListProject(request,id=None):
     #select all catgory from model
+    print(type(request.GET.get('workspaceId')))
     if(id is not None):
         data=get_object_or_404(Project,id=id)
         dataserlized=Projectselizer(data)

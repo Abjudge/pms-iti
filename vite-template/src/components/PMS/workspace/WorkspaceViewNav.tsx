@@ -128,10 +128,10 @@ export default function WorkspaceViewNav() {
   // console.log("hereNoMimo",workspaceNoMimo);
   
   const { data: workspaces, error: workspacesError, isLoading: workspacesLoading } = useWorkspaces();
-  console.log("workspaces", workspaces);
   const workspaceData = useWorkspace(workspaces, workspaceID);
   console.log("workspaceData", workspaceData);
   const ownerID = workspaceData?.ownerID;
+
   
   const addProject = (project) => {
     return MyAxios.post('projects/Add', project, { headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' }})
@@ -171,8 +171,8 @@ export default function WorkspaceViewNav() {
     navigate(`/workspaces/workspace/${workspaceID}/project/${projectID}`);
   }
 
-
-  const { data: projects, error: projectsError, isLoading: projectsLoading } = useProjects(workspaceID);
+  console.log("workspaceIDType", workspaceID, typeof(workspaceData?.id));
+  const { data: projects, error: projectsError, isLoading: projectsLoading } = useProjects(workspaceData?.id);
 
   console.log("projectsNN", projects);
 

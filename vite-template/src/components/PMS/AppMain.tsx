@@ -125,6 +125,7 @@ export default function AppMain() {
   }));
 
   const { classes } = useStyles();
+  alert('AppMain');
 
   const { pathname } = useLocation();
   if (pathname === '/workspaces') {

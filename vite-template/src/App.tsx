@@ -52,10 +52,17 @@ export default function App() {
           element={
             <PrivateRoute>
               <MainAppShell />
-              <WorkspaceListMain />
             </PrivateRoute>
           }
         >
+            <Route
+              path="/workspaces"
+              element={
+                <PrivateRoute>
+                  <WorkspaceListMain />
+                </PrivateRoute>
+              }
+            />
             <Route
               path="/workspaces/workspace/:workspaceId"
               element={

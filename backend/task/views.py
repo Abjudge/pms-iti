@@ -32,7 +32,21 @@ def Tasklist(request,id=None,status=None,project_id=None):
             serializer = TaskSerializer(task,many=True)
             return Response(serializer.data)
 
-
+@api_view(['GET'])
+def TasklistByProject(request,project_id=None,status=None):
+    if project_id:
+        if status:
+            task = Task.objects.filter(project_id=project_id,status=status)
+            serializer = TaskSerializer(task,many=True)
+            return Response(serializer.data, status=HTTP_200_OK)
+        else:
+            task = Task.objects.filter(project_id=project_id)
+            serializer = TaskSerializer(task,many=True)
+            return Response(serializer.data)
+    else:
+        return Response(status=HTTP_400_BAD_REQUEST, data="please enter project id")
+    
+    
 @api_view(['POST'])
 def TaskCreate(request):
     user_id= request.user.id
@@ -86,13 +100,23 @@ def TaskUpdate(request,id):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors,status=HTTP_400_BAD_REQUEST)
+@api_view(['PUT'])  
+def TaskUpdateStatus(request,id,status):
+    if status != 'd' and status != 'p' and status != 't' and status != 'f':
+        return Response(status=HTTP_400_BAD_REQUEST, data="status must be 'd' or 'p' or 't' or 'f'")
+
+    Task=get_object_or_404(Task,id=id)
+    Task.status=status  
+    Task.save()
+    return Response(status=HTTP_200_OK,data="status updated successfully")
+    
 
 
 @api_view(['PUT'])
 def StartTask(request,id):
     user_id= request.user.id
     task=get_object_or_404(Task,id=id)
-    if user_id == task.developer_id.id:
+    if user_id:
         request.data['status']='p'
         serializer = TaskSerializer(instance= task,data=request.data)
         if serializer.is_valid():

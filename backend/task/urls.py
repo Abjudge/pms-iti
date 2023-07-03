@@ -5,9 +5,11 @@ urlpatterns = [
     path('',Tasklist,name='Tasklist'),
     path('project_id/<int:project_id>/',Tasklist,name='Tasklist'),
     path("id/<int:id>/",Tasklist,name='Tasklist'),
-    path("status/<str:status>/",Tasklist,name='Tasklist'),
+    path("status/<str:status>/project/<int:project_id>/",TasklistByProject,name='TasklistByProject'),
     path('create/',TaskCreate,name='TaskCreate'),
+    
     path('update/<int:id>/',TaskUpdate,name='TaskUpdate'),
+    path('update/<int:id>/status/<str:status>/',TaskUpdateStatus,name='TaskUpdateStatus'),
     path('delete/<int:id>/',TaskDelete,name='TaskDelete'),
     path('<int:id>/start/',StartTask,name='StartTask'),
     path('<int:id>/submit/',SubmitTask,name='SubmitTask'),

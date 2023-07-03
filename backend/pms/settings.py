@@ -191,6 +191,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_ROOT = BASE_DIR/'media'
 MEDIA_URL = '/media/'
 
+
 DOMAIN = "localhost:5173"
 SITE_NAME = "PMS"
 CORS_ALLOW_ALL_ORIGINS = True

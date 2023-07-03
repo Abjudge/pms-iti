@@ -233,7 +233,7 @@ function AppHeader() {
               {workspaces ? (
                 workspaces.map((workspace) => (
               
-                    <Menu.Item key={workspace.id} onClick={() => goToWorkspace(workspace.id)}>
+                    <Menu.Item key={workspace.id} onClick={() => {goToWorkspace(workspace.id)}}>
                       {workspace.name}
                     </Menu.Item>
                     // {/* <img src={baseURL + workspace.image} height="400px" alt="dfsgfdsgfd" /> */}

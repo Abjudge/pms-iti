@@ -1,6 +1,10 @@
 import { Button, Container, createStyles, Group, rem, Text, ScrollArea, Flex, Stack, Center, Title } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import useDoneTasks from '../queries/GetDoneTasks';
+
+
 
 const useStyles = createStyles((theme) => ({
     item: {
@@ -38,27 +42,24 @@ const useStyles = createStyles((theme) => ({
 
 export default function Done() {
 
-    const toDo = [
-    { "id": 1, "name": "Task1", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 2, "name": "Task2", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 3, "name": "Task3", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 4, "name": "Task4", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 5, "name": "Task5", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-  ];
   const { classes, cx } = useStyles();
-  const [state, handlers] = useListState(toDo);
+
+  const { projectID } = useParams();
+  const {data: tasks} = useDoneTasks(projectID);
+  console.log("in tasks", tasks);
+  const [state, handlers] = useListState(tasks);
 
   const items = state.map((item, index) => (
     <Draggable key={item.id} index={index} draggableId={item.name}>
     {(provided, snapshot) => (
-      <div
-        className={cx(classes.item, { [classes.itemDragging]: snapshot.isDragging })}
+      <Container 
+      className={cx(classes.item, { [classes.itemDragging]: snapshot.isDragging })}
         {...provided.draggableProps}
         {...provided.dragHandleProps}
         ref={provided.innerRef}
       >
-        
-        <div>
+        <Group position="apart" p={20}>
+        <Stack>
           <Text>{item.name}</Text>
           <Text color="dimmed" size="sm">
             Start Date: {item.startDate} 
@@ -66,14 +67,15 @@ export default function Done() {
             <Text color="dimmed" size="sm">
             End Date: {item.endDate}
             </Text>
-        </div>
-      </div>
+      </Stack>
+      </Group>
+      </Container>
     )}
   </Draggable>
   ));
     return (
-        <Stack bg="#99c1f1" p={20} sx={{borderRadius: "5px",  boxShadow: '0px 10px 15px 8px rgba(0,0,0,0.1)' }}>
-        <Center><Title order={2} c="White" >ToDo</Title></Center>
+        <Stack bg="#33d17a" p={20} sx={{borderRadius: "5px",  boxShadow: '0px 10px 15px 8px rgba(0,0,0,0.1)' }}>
+        <Center><Title order={2} c="White" >Done</Title></Center>
     <DragDropContext
       onDragEnd={({ destination, source }) =>
         handlers.reorder({ from: source.index, to: destination?.index || 0 })
@@ -89,7 +91,6 @@ export default function Done() {
         )}
       </Droppable>
       </ScrollArea>
-      <Button onClick={() => handlers.append({})}>Add item</Button>
     </DragDropContext>
     </Stack>
     );

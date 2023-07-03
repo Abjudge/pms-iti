@@ -72,8 +72,8 @@ export default function Failed() {
   </Draggable>
   ));
     return (
-        <Stack bg="#99c1f1" p={20} sx={{borderRadius: "5px",  boxShadow: '0px 10px 15px 8px rgba(0,0,0,0.1)' }}>
-        <Center><Title order={2} c="White" >ToDo</Title></Center>
+        <Stack bg="#e01b24" p={20} sx={{borderRadius: "5px",  boxShadow: '0px 10px 15px 8px rgba(0,0,0,0.1)' }}>
+        <Center><Title order={2} c="White" >Failed</Title></Center>
     <DragDropContext
       onDragEnd={({ destination, source }) =>
         handlers.reorder({ from: source.index, to: destination?.index || 0 })
@@ -89,7 +89,6 @@ export default function Failed() {
         )}
       </Droppable>
       </ScrollArea>
-      <Button onClick={() => handlers.append({})}>Add item</Button>
     </DragDropContext>
     </Stack>
     );

@@ -3,11 +3,11 @@ import '../../../redux/slices/TokensSlice';
 import { useQuery } from '@tanstack/react-query';
 import MyAxios from '../../../utils/AxiosInstance';
 
-const useWorkspaces = () => {
+const useDoneTasks = (projectId) => {
   const tokens = useSelector((state) => state.TokensSlice.tokens);
 
-  const fetchWorkspaces = async () => {
-    const response = await MyAxios.get('workspaces/', {
+  const fetchProjects = async () => {
+    const response = await MyAxios.get(`task/status/${'d'}/project/${projectId}/`, {
       headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
     });
 
@@ -18,7 +18,7 @@ const useWorkspaces = () => {
     return response.data;
   };
 
-  return useQuery(['workspaces'], fetchWorkspaces, {initialData: []});
+  return useQuery(['doneTasks'], fetchProjects, { initialData: [] });
 };
 
-export default useWorkspaces;
+export default useDoneTasks;

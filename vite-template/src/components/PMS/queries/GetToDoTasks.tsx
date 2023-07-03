@@ -3,11 +3,11 @@ import '../../../redux/slices/TokensSlice';
 import { useQuery } from '@tanstack/react-query';
 import MyAxios from '../../../utils/AxiosInstance';
 
-const useTasks = () => {
+const useToDoTasks = (projectId) => {
   const tokens = useSelector((state) => state.TokensSlice.tokens);
 
   const fetchProjects = async () => {
-    const response = await MyAxios.get('task/', {
+    const response = await MyAxios.get(`task/status/${'s'}/project/${projectId}/`, {
       headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
     });
 
@@ -18,7 +18,7 @@ const useTasks = () => {
     return response.data;
   };
 
-  return useQuery(['tasks'], fetchProjects, { refetchOnMount: false, refetchOnReconnect: false, refetchOnWindowFocus: false });
+  return useQuery(['toDoTasks'], fetchProjects, { initialData: [] });
 };
 
-// export default useTasks;
+export default useToDoTasks;

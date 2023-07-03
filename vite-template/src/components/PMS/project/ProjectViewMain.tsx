@@ -2,6 +2,9 @@ import { Button, Container, createStyles, Group, rem, Text, ScrollArea, Flex, St
 import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import ToDo from '../tasks/ToDo';
+import InProgress from '../tasks/InProgress';
+import Testing from '../tasks/Testing';
+import Done from '../tasks/Done';
 
 const useStyles = createStyles((theme) => ({
     item: {
@@ -87,107 +90,12 @@ export default function DndListHandle() {
 
       <ToDo />
     
-    <Stack >
-    <Center><Text>ToDo</Text></Center>
-    <DragDropContext
-      onDragEnd={({ destination, source }) =>
-        handlers.reorder({ from: source.index, to: destination?.index || 0 })
-      }
-    >
-        <ScrollArea w={300} h={400}>
-      <Droppable droppableId="dnd-list" direction="vertical">
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {items}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-        </ScrollArea>
-      <Button onClick={() => handlers.append({})}>Add item</Button>
-    </DragDropContext>
-    </Stack>
-    
-    <Stack>
-    <Center><Text>ToDo</Text></Center>
-    <DragDropContext
-      onDragEnd={({ destination, source }) =>
-        handlers.reorder({ from: source.index, to: destination?.index || 0 })
-      }
-    >
-        <ScrollArea w={300} h={400}>
-      <Droppable droppableId="dnd-list" direction="vertical">
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {items}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-        </ScrollArea >
-      <Button onClick={() => handlers.append({})}>Add item</Button>
-    </DragDropContext>
-    </Stack>
-    <Stack >
-    <Center><Text>ToDo</Text></Center>
-    <DragDropContext
-      onDragEnd={({ destination, source }) =>
-        handlers.reorder({ from: source.index, to: destination?.index || 0 })
-      }
-    >
-        <ScrollArea w={300} h={400}>
-      <Droppable droppableId="dnd-list" direction="vertical">
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {items}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-        </ScrollArea>
-      <Button onClick={() => handlers.append({})}>Add item</Button>
-    </DragDropContext>
-    </Stack>
-    <Stack>
-    <Center><Text>ToDo</Text></Center>
-    <DragDropContext
-      onDragEnd={({ destination, source }) =>
-        handlers.reorder({ from: source.index, to: destination?.index || 0 })
-      }
-    >
-        <ScrollArea w={300} h={400}>
-      <Droppable droppableId="dnd-list" direction="vertical">
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {items}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-        </ScrollArea>
-      <Button onClick={() => handlers.append({})}>Add item</Button>
-    </DragDropContext>
-    </Stack>
-    <Stack>
-    <Center><Text>ToDo</Text></Center>
-    <DragDropContext
-      onDragEnd={({ destination, source }) =>
-        handlers.reorder({ from: source.index, to: destination?.index || 0 })
-      }
-    >
-        <ScrollArea w={300} h={400}>
-      <Droppable droppableId="dnd-list" direction="vertical">
-        {(provided) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {items}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-        </ScrollArea>
-      <Button onClick={() => handlers.append({})}>Add item</Button>
-    </DragDropContext>
-    </Stack>
+      <InProgress />
+
+      <Testing />
+
+      <Done />
+
     </Flex>
     </Container>
 

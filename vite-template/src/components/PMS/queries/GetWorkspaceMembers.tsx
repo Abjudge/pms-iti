@@ -18,7 +18,7 @@ const useWorkspaceMembers = (workspaceId) => {
     return response.data;
   };
 
-  return useQuery(['workspaceMembers'], fetchWorkspaceMembers);
+  return useQuery(['workspaceMembers'], fetchWorkspaceMembers, {initialData: []});
 };
 
 export default useWorkspaceMembers;

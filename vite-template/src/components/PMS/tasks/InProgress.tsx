@@ -1,6 +1,10 @@
 import { Button, Container, createStyles, Group, rem, Text, ScrollArea, Flex, Stack, Center, Title } from '@mantine/core';
 import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import useInProgressTasks from '../queries/GetInProgressTasks';
+
+
 
 const useStyles = createStyles((theme) => ({
     item: {
@@ -38,27 +42,30 @@ const useStyles = createStyles((theme) => ({
 
 export default function InProgress() {
 
-    const toDo = [
-    { "id": 1, "name": "Task1", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 2, "name": "Task2", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 3, "name": "Task3", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 4, "name": "Task4", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 5, "name": "Task5", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-  ];
   const { classes, cx } = useStyles();
-  const [state, handlers] = useListState(toDo);
+
+  const params = useParams();
+
+  const projectID = params.projectId;
+
+  console.log("projectID In progresssssssssssssssssssssssssssssssss", projectID);
+
+
+  const {data: tasks} = useInProgressTasks(projectID);
+  console.log("in progress tasks", tasks);
+  const [state, handlers] = useListState(tasks);
 
   const items = state.map((item, index) => (
     <Draggable key={item.id} index={index} draggableId={item.name}>
     {(provided, snapshot) => (
-      <div
-        className={cx(classes.item, { [classes.itemDragging]: snapshot.isDragging })}
+      <Container 
+      className={cx(classes.item, { [classes.itemDragging]: snapshot.isDragging })}
         {...provided.draggableProps}
         {...provided.dragHandleProps}
         ref={provided.innerRef}
       >
-        
-        <div>
+        <Group position="apart" p={20}>
+        <Stack>
           <Text>{item.name}</Text>
           <Text color="dimmed" size="sm">
             Start Date: {item.startDate} 
@@ -66,14 +73,21 @@ export default function InProgress() {
             <Text color="dimmed" size="sm">
             End Date: {item.endDate}
             </Text>
-        </div>
-      </div>
+      </Stack>
+      <Group>
+      <Button bg="#9141ac"> 
+          Submit for test
+        </Button>
+        
+      </Group>
+      </Group>
+      </Container>
     )}
   </Draggable>
   ));
     return (
-        <Stack bg="#99c1f1" p={20} sx={{borderRadius: "5px",  boxShadow: '0px 10px 15px 8px rgba(0,0,0,0.1)' }}>
-        <Center><Title order={2} c="White" >ToDo</Title></Center>
+        <Stack bg="#f6d32d" p={20} sx={{borderRadius: "5px",  boxShadow: '0px 10px 15px 8px rgba(0,0,0,0.1)' }}>
+        <Center><Title order={2} c="White" >In Progress</Title></Center>
     <DragDropContext
       onDragEnd={({ destination, source }) =>
         handlers.reorder({ from: source.index, to: destination?.index || 0 })
@@ -89,7 +103,6 @@ export default function InProgress() {
         )}
       </Droppable>
       </ScrollArea>
-      <Button onClick={() => handlers.append({})}>Add item</Button>
     </DragDropContext>
     </Stack>
     );
