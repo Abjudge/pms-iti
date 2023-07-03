@@ -119,11 +119,14 @@ def addMember(request,ws_id):
     else:
     # print(request.data['Workspace_id'])
         
-        memberserialized= WorkspaceMemberserializer(data=data)
+        memberserialized= WorkspaceMemberSerializer2(data=data)
         if memberserialized.is_valid():
             memberserialized.save()
             return Response(status=HTTP_200_OK , data=memberserialized.data)
-    
+        print(memberserialized.errors)
+    return Response(status=HTTP_400_BAD_REQUEST)
+
+
 @api_view(['GET'])
 def listMembers(request, ws_id):
     members = WorkspaceMember.objects.filter(Workspace_id=ws_id)
@@ -140,7 +143,7 @@ def deleteMember(request,id):
 @api_view(['PUT'])
 def updateMember(request, id):
     member = get_object_or_404(WorkspaceMember, id=id)
-    serializer = WorkspaceMemberserializer(instance=member, data=request.data)
+    serializer = WorkspaceMemberSerializer2(instance=member, data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response(status=HTTP_200_OK, data=serializer.data)

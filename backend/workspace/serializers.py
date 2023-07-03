@@ -10,6 +10,17 @@ class Workspaceserializer(serializers.ModelSerializer):
         model=Workspace
         fields ='__all__'
         
+class WorkspaceMemberSerializer2(serializers.ModelSerializer):
+    """
+    Serializer for WorkspaceMember model.
+    """
+
+
+    class Meta:
+        model = WorkspaceMember
+        fields ='__all__'
+
+  
 class WorkspaceMemberSerializer(serializers.ModelSerializer):
     """
     Serializer for WorkspaceMember model.
