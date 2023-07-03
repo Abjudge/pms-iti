@@ -38,13 +38,6 @@ const useStyles = createStyles((theme) => ({
 
 export default function Failed() {
 
-    const toDo = [
-    { "id": 1, "name": "Task1", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 2, "name": "Task2", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 3, "name": "Task3", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 4, "name": "Task4", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-    { "id": 5, "name": "Task5", "startDate": "2021-09-01", "endDate": "2021-09-30",},
-  ];
   const { classes, cx } = useStyles();
   const [state, handlers] = useListState(toDo);
 

@@ -253,3 +253,17 @@ def CommentDelete(request,id):
         return Response(status=HTTP_204_NO_CONTENT,data="comment deleted successfully")
     else:
         return Response(status=HTTP_400_BAD_REQUEST, data="you can't delete this comment")
+
+@api_view(['PUT'])
+def donetask(request,id):
+    user_id= request.user.id
+    task=get_object_or_404(Task,id=id)
+    if user_id == task.tester_id.id:
+        request.data['status']='d'
+        serializer = TaskSerializer(instance= task,data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors,status=HTTP_400_BAD_REQUEST)
+    else:
+        return Response(status=HTTP_400_BAD_REQUEST, data="you can't submit this task")

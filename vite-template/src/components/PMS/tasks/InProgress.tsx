@@ -3,6 +3,10 @@ import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import useInProgressTasks from '../queries/GetInProgressTasks';
+import { useDispatch, useSelector } from 'react-redux';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import MyAxios from '../../../utils/AxiosInstance';
+
 
 
 
@@ -47,15 +51,31 @@ export default function InProgress() {
   const params = useParams();
 
   const projectID = params.projectId;
+  const tokens = useSelector((state) => state.TokensSlice.tokens);
+
+  const queryClient = useQueryClient();
+
 
   console.log("projectID In progresssssssssssssssssssssssssssssssss", projectID);
+
+
+  function changeStatus(item) {
+    MyAxios.put(`task/${item.id}/submit/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((response) => {
+      queryClient.setQueryData(['inProgressTasks'],
+        (oldData) => oldData ? oldData.map((task) => task.id === id ? { ...task, status: newStatus } : task) : [response.data]
+
+      );
+    });
+  }
 
 
   const {data: tasks} = useInProgressTasks(projectID);
   console.log("in progress tasks", tasks);
   const [state, handlers] = useListState(tasks);
 
-  const items = state.map((item, index) => (
+
+
+  const items = tasks.map((item, index) => (
     <Draggable key={item.id} index={index} draggableId={item.name}>
     {(provided, snapshot) => (
       <Container 
@@ -75,7 +95,7 @@ export default function InProgress() {
             </Text>
       </Stack>
       <Group>
-      <Button bg="#9141ac"> 
+      <Button bg="#9141ac" onClick={() => { changeStatus(item); }}> 
           Submit for test
         </Button>
         

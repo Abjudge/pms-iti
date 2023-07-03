@@ -116,19 +116,21 @@ export default function ToDo() {
   }
 
 
-  const { data: tasks } = useToDoTasks(projectID);
-
-
-  const [state, handlers] = useListState(tasks);
-
   function changeStatus(item) {
     MyAxios.put(`task/${item.id}/start/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((response) => {
-      queryClient.setQueryData(['tasks'],
+      queryClient.setQueryData(['toDoTasks'],
         (oldData) => oldData ? oldData.map((task) => task.id === id ? { ...task, status: newStatus } : task) : [response.data]
 
       );
     });
   }
+
+  const { data: tasks } = useToDoTasks(projectID);
+
+
+  const [state, handlers] = useListState(tasks);
+
+
 
 
 
@@ -153,7 +155,7 @@ export default function ToDo() {
             </Stack>
             <Group>
               <Button onClick={() => { changeStatus(item); }}>
-                Delter item
+                Start
               </Button>
 
             </Group>

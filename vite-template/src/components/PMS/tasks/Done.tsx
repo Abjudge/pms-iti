@@ -44,12 +44,16 @@ export default function Done() {
 
   const { classes, cx } = useStyles();
 
-  const { projectID } = useParams();
+  const params = useParams();
+
+  const projectID = params.projectId;
+  console.log("in tasks doooooooooooooooooooooone", projectID);
+
   const {data: tasks} = useDoneTasks(projectID);
   console.log("in tasks", tasks);
   const [state, handlers] = useListState(tasks);
 
-  const items = state.map((item, index) => (
+  const items = tasks.map((item, index) => (
     <Draggable key={item.id} index={index} draggableId={item.name}>
     {(provided, snapshot) => (
       <Container 

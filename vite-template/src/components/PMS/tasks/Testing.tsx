@@ -2,7 +2,11 @@ import { Button, Container, createStyles, Group, rem, Text, ScrollArea, Flex, St
 import { useListState } from '@mantine/hooks';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useDispatch, useSelector } from 'react-redux';
 import useTestingTasks from '../queries/GetTestingTasks';
+import MyAxios from '../../../utils/AxiosInstance';
+
 
 
 const useStyles = createStyles((theme) => ({
@@ -44,7 +48,30 @@ export default function Testing() {
   const { classes, cx } = useStyles();
 
   const params = useParams();
-  const projectID = params.id;
+  const projectID = params.projectId;
+  const tokens = useSelector((state) => state.TokensSlice.tokens);
+  const queryClient = useQueryClient();
+
+  console.log("in testinggggggggggggggggggggg", projectID);
+
+  function changeToFailed(item) {
+    MyAxios.put(`task/${item.id}/start/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((response) => {
+      queryClient.setQueryData(['testingTasks'],
+        (oldData) => oldData ? oldData.map((task) => task.id === id ? { ...task, status: newStatus } : task) : [response.data]
+
+      );
+    });
+  }
+
+  function changeToDone(item) {
+    MyAxios.put(`task/${item.id}/done/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((response) => {
+      queryClient.setQueryData(['testingTasks'],
+        (oldData) => oldData ? oldData.map((task) => task.id === id ? { ...task, status: newStatus } : task) : [response.data]
+
+      );
+    });
+  }
+
 
 
 
@@ -52,7 +79,7 @@ export default function Testing() {
   console.log("in tasks", tasks);
   const [state, handlers] = useListState(tasks);
 
-  const items = state.map((item, index) => (
+  const items = tasks.map((item, index) => (
     <Draggable key={item.id} index={index} draggableId={item.name}>
     {(provided, snapshot) => (
       <Container 
@@ -72,10 +99,10 @@ export default function Testing() {
             </Text>
       </Stack>
       <Group>
-      <Button bg="#e01b24"> 
+      <Button bg="#e01b24" onClick={() => { changeToFailed(item);}}> 
           Failed
         </Button>
-        <Button bg="#33d17a">
+        <Button bg="#33d17a" onClick={() => { changeToDone(item);}}>
           Done
         </Button>
         

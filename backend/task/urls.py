@@ -15,7 +15,7 @@ urlpatterns = [
     path('<int:id>/submit/',SubmitTask,name='SubmitTask'),
     path('<int:id>/setresult/<str:status>',TestTask,name='TestTask'),
     # path('<int:id>/cancel',CancelTask,name='CancelTask'),
-    
+    path('<int:id>/done/',donetask,name='donetask'),
     
     path('<int:id>/addcomment/',CommentCreate,name='CommentCreate'),
     path('comment/update/<int:id>/',CommentUpdate,name='CommentUpdate'),
