@@ -38,43 +38,6 @@ export default function WorkspaceViewMain() {
   const theme = useMantineTheme();
   const [openedModal, { open, close }] = useDisclosure(false);
   const [openedConfirm, { open: openConfirm, close: closeConfirm }] = useDisclosure(false);
-  const userData = [
-    {
-      avatar:
-        'https://images.unsplash.com/photo-1624298357597-fd92dfbec01d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80',
-      name: 'Robert Wolfkisser',
-      job: 'Admin',
-      email: 'rob_wolf@gmail.com',
-    },
-    {
-      avatar:
-        'https://images.unsplash.com/photo-1586297135537-94bc9ba060aa?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80',
-      name: 'Jill Jailbreaker',
-      job: 'Developer',
-      email: 'jj@breaker.com',
-    },
-    {
-      avatar:
-        'https://images.unsplash.com/photo-1632922267756-9b71242b1592?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80',
-      name: 'Henry Silkeater',
-      job: 'Developer',
-      email: 'henry@silkeater.io',
-    },
-    {
-      avatar:
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80',
-      name: 'Bill Horsefighter',
-      job: 'Tester',
-      email: 'bhorsefighter@gmail.com',
-    },
-    {
-      avatar:
-        'https://images.unsplash.com/photo-1630841539293-bd20634c5d72?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=250&q=80',
-      name: 'Jeremy Footviewer',
-      job: 'Tester',
-      email: 'jeremy@foot.dev',
-    },
-  ];
 
   // search users
   const tokens = useSelector((state) => state.TokensSlice.tokens);
@@ -145,20 +108,17 @@ export default function WorkspaceViewMain() {
       return 'Tester';
     }
   };
-
-  const {
-    data: workspaceMembers,
-    error: workspacceMembersError,
-    isLoading: workspaceMembersLoading,
-  } = useWorkspaceMembers(workspaceID);
+  const [del_id, setdel_id] = useState(0);
+  const { data: workspaceMembers } = useWorkspaceMembers(workspaceID);
   console.log('workspaceMembers', workspaceMembers);
-
-  function clicked () {
-    console.log('clicked');
-  }
-
-  
-
+  console.log('🚀 ~ file: WorkspaceViewMain.tsx:115 ~ delmember ~ del_id:', del_id);
+  const delmember = async (del_id) => {
+    const response = await MyAxios.delete(`workspaces/members/deleteMember/${del_id}`, {
+      headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
+    });
+    closeConfirm();
+    console.log('🚀 ~ file: WorkspaceViewMain.tsx:120 ~ delmember ~ response:', response);
+  };
   return (
     <Container>
       <Flex mih={50} gap="md" justify="space-between" align="center" direction="row" wrap="wrap">
@@ -215,10 +175,16 @@ export default function WorkspaceViewMain() {
             padding: '20px',
           }}
         >
-          <Button type="button" onClick={closeConfirm} color="red">
+          <Button
+            type="button"
+            onClick={() => {
+              delmember(del_id);
+            }}
+            color="red"
+          >
             Delete
           </Button>
-          <Button type="button" onClick={closeConfirm} >
+          <Button type="button" onClick={closeConfirm}>
             Cancel
           </Button>
         </Group>
@@ -234,42 +200,48 @@ export default function WorkspaceViewMain() {
             </tr>
           </thead>
           <tbody>
-          {workspaceMembers?.map((item) => (
-      <tr key={item.first_name}>
-        <td>
-          <Group spacing="sm">
-            <Text fz="sm" fw={500}>
-              {item.first_name + ' ' + item.last_name}
-            </Text>
-          </Group>
-        </td>
+            {workspaceMembers?.map((item) => (
+              <tr key={item.id}>
+                <td>
+                  <Group spacing="sm">
+                    <Text fz="sm" fw={500}>
+                      {item.first_name + ' ' + item.last_name}
+                    </Text>
+                  </Group>
+                </td>
 
-        <td>
-          <Badge
-            color={jobColors[role_conv(item.role).toLowerCase()]}
-            variant={theme.colorScheme === 'dark' ? 'light' : 'outline'}
-          >
-            {role_conv(item.role)}
-          </Badge>
-        </td>
-        <td>
-          <Anchor component="button" size="sm">
-            {item.email}
-          </Anchor>
-        </td>
+                <td>
+                  <Badge
+                    color={jobColors[role_conv(item.role).toLowerCase()]}
+                    variant={theme.colorScheme === 'dark' ? 'light' : 'outline'}
+                  >
+                    {role_conv(item.role)}
+                  </Badge>
+                </td>
+                <td>
+                  <Anchor component="button" size="sm">
+                    {item.email}
+                  </Anchor>
+                </td>
 
-        <td>
-          <Group spacing={0} position="right">
-            <ActionIcon>
-              <IconPencil size="1rem" stroke={1.5} />
-            </ActionIcon>
-            <ActionIcon color="red" onClick={openConfirm}>
-              <IconTrash size="1rem" stroke={1.5} />
-            </ActionIcon>
-          </Group>
-        </td>
-      </tr>
-    )) || []}
+                <td>
+                  <Group spacing={0} position="right">
+                    <ActionIcon>
+                      <IconPencil size="1rem" stroke={1.5} />
+                    </ActionIcon>
+                    <ActionIcon
+                      color="red"
+                      onClick={() => {
+                        setdel_id(item.id);
+                        openConfirm();
+                      }}
+                    >
+                      <IconTrash size="1rem" stroke={1.5} />
+                    </ActionIcon>
+                  </Group>
+                </td>
+              </tr>
+            )) || []}
           </tbody>
         </Table>
       </ScrollArea>

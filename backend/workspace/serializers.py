@@ -10,7 +10,7 @@ class Workspaceserializer(serializers.ModelSerializer):
         model=Workspace
         fields ='__all__'
         
-class WorkspaceMemberSerializer2(serializers.ModelSerializer):
+class WorkspaceMemberSerializer(serializers.ModelSerializer):
     """
     Serializer for WorkspaceMember model.
     """
@@ -21,18 +21,18 @@ class WorkspaceMemberSerializer2(serializers.ModelSerializer):
         fields ='__all__'
 
   
-class WorkspaceMemberSerializer(serializers.ModelSerializer):
+class WorkspaceMemberListSerializer(serializers.ModelSerializer):
     """
     Serializer for WorkspaceMember model.
     """
-    id = serializers.IntegerField(source='user_id.id')
+    user_id = serializers.IntegerField(source='user_id.id')
     email = serializers.EmailField(source='user_id.email')
     first_name = serializers.SerializerMethodField()
     last_name = serializers.SerializerMethodField()
 
     class Meta:
         model = WorkspaceMember
-        fields = ['id', 'role', 'email', 'first_name', 'last_name']
+        fields = ['id', 'user_id','role', 'email', 'first_name', 'last_name']
 
     def get_first_name(self, obj):
         """
