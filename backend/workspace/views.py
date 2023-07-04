@@ -63,12 +63,8 @@ def UpdateWorkspace(request,id):
 
 def AddWorkspace(request):
 
-    data={}
-    data['image']=request.FILES['image']
-    data['owner_id']=request.data["owner_id"]
-    data['name']=request.data["name"]
-    data['description']=request.data["description"]
-    item=Workspaceserializer(data=data)
+
+    item=Workspaceserializer(data=request.data)
 
     if(item.is_valid()):
         item.save()

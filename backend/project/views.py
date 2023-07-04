@@ -29,17 +29,18 @@ def UpdateProject(request,id):
 
 @api_view(['POST'])
 def AddProject(request):
-
-
+    request_data=request.data.copy()
     workspace=Workspace.objects.get(id=request.data['workspace_id'])
     if workspace.integrate!=False:
         if  workspace.token==None:
             return Response(status=HTTP_406_NOT_ACCEPTABLE,data={"detail":"please add github token"})
-        repo=github.create_repo(request.data['name'],workspace.token)
-        request.data['clone_url']=repo[0]
-        request.data['repo_name']=repo[1]
+        clone_url,repo_name=github.create_repo(request.data['name'],workspace.token)
+        print("***************************************")
+       
+        request_data['clone_url']=clone_url
+        request_data['repo_name']=repo_name
 
-    item=Projectselizer(data=request.data)
+    item=Projectselizer(data=request_data)
     
     if(item.is_valid()):
         item.save()
@@ -55,7 +56,7 @@ def ListProject(request,id=None):
     if(id is not None):
         data=get_object_or_404(Project,id=id)
         dataserlized=Projectselizer(data)
-        return Response(status=HTTP_202_ACCEPTED, data= dataserlized.data)
+        return Response(status=HTTP_207_MULTI_STATUS, data= dataserlized.data)
     else:
         data=Project.objects.all().filter(workspace_id=request.GET.get('workspaceId'))
         dataserlized=Projectselizer(data,many=True)

@@ -1,6 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { useMutation, useQueryClient} from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import MyAxios from '../../../utils/AxiosInstance';
 import useWorkspaces from '../queries/GetWorkspaces';
 import useWorkspace from '../queries/GetWorkspace';
@@ -29,13 +29,10 @@ import { DatePickerInput, DateInput, DateTimePicker } from '@mantine/dates';
 import { IconPlus, IconPencil } from '@tabler/icons-react';
 import { useSelector } from 'react-redux';
 
-
 export default function WorkspaceViewNav() {
-
   const theme = useMantineTheme();
   const [opened, setOpened] = useState(false);
   const [openedModal, { open, close }] = useDisclosure(false);
-
 
   const useStyles = createStyles((theme) => ({
     header: {
@@ -113,70 +110,91 @@ export default function WorkspaceViewNav() {
   const tokens = useSelector((state) => state.TokensSlice.tokens);
   const baseURL = useSelector((state) => state.TokensSlice.baseURL);
 
-
-
- 
-
-
   const params = useParams();
-  console.log("params", params);
+  console.log('params', params);
 
- const workspaceID = params.workspaceId;
+  const workspaceID = params.workspaceId;
   // console.log("here id",data[0]?.id);
 
   // const workspaceNoMimo = data?.find(workspace => workspace?.id == workspaceID);
   // console.log("hereNoMimo",workspaceNoMimo);
-  
-  const { data: workspaces, error: workspacesError, isLoading: workspacesLoading } = useWorkspaces();
+
+  const {
+    data: workspaces,
+    error: workspacesError,
+    isLoading: workspacesLoading,
+  } = useWorkspaces();
   const workspaceData = useWorkspace(workspaces, workspaceID);
-  console.log("workspaceData", workspaceData);
+  console.log('workspaceData', workspaceData);
   const ownerID = workspaceData?.ownerID;
 
-  
   const addProject = (project) => {
-    return MyAxios.post('projects/Add', project, { headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' }})
-  }
-  
+    return MyAxios.post('projects/Add', project, {
+      headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' },
+    });
+  };
 
   const queryClient = useQueryClient();
 
-  
   const createProjectMutation = useMutation(addProject, {
     onSuccess: (newData) => {
-    //  queryClient.setQueryData(['projects'], 
-    //  (oldData) => {
-    //   console.log("oldDataProject", oldData);
-    //   return oldData ? [...oldData, newData.data] : [newData.data]
-    // },
-  
-    //  ); 
+      //  queryClient.setQueryData(['projects'],
+      //  (oldData) => {
+      //   console.log("oldDataProject", oldData);
+      //   return oldData ? [...oldData, newData.data] : [newData.data]
+      // },
+      //  );
     },
   });
-  
-   function createProject(e) {
-      e.preventDefault();
-      createProjectMutation.mutate({
-          name: e.target.projectName.value,
-          description: e.target.projectDescription.value,
-          start_date: e.target.startDate.value,
-          end_date: e.target.endDate.value,
-          workspace_id: workspaceID,
-      },
-      );
-      close();
-    }
 
-    const navigate = useNavigate();
+  function createProject(e) {
+    e.preventDefault();
+    createProjectMutation.mutate({
+      name: e.target.projectName.value,
+      description: e.target.projectDescription.value,
+      start_date: e.target.startDate.value,
+      end_date: e.target.endDate.value,
+      workspace_id: workspaceID,
+    });
+    close();
+  }
+  const navigate = useNavigate();
   function goToProject(projectID) {
     navigate(`/workspaces/workspace/${workspaceID}/project/${projectID}`);
   }
 
-  console.log("workspaceIDType", workspaceID, typeof(workspaceData?.id));
-  const { data: projects, error: projectsError, isLoading: projectsLoading } = useProjects(workspaceData?.id);
+  console.log('workspaceIDType', workspaceID, typeof workspaceData?.id);
+  const {
+    data: projects,
+    error: projectsError,
+    isLoading: projectsLoading,
+  } = useProjects(workspaceData?.id);
 
-  console.log("projectsNN", projects);
+  console.log('projectsNN', projects);
+  const [pro_data, setpro_data] = useState([]);
 
+  const fetchData = async () => {
+    // workspaces
+    try {
+      const response = await MyAxios.get('projects/', {
+        headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'application/json' },
+        params: { workspaceId: workspaceID },
+      });
 
+      if (response.status == 207) {
+        setpro_data(response.data);
+      } else {
+        alert('failed');
+      }
+    } catch (error) {
+      alert('fetch error ');
+    }
+  };
+  useEffect(() => {
+    fetchData();
+    // trying();
+  }, []);
+  console.log(pro_data);
   return (
     <Navbar p="md" hiddenBreakpoint="sm" hidden={!opened} width={{ md: 700, lg: 300 }}>
       <Group>
@@ -204,8 +222,14 @@ export default function WorkspaceViewNav() {
       </Group>
       <Divider mt={10} />
       <hr />
-      <Modal opened={openedModal} onClose={close} title="Create Workspace" style={{overflow: "scroll"}} centered>
-        <form action="" method="post" onSubmit={createProject} >
+      <Modal
+        opened={openedModal}
+        onClose={close}
+        title="Create Workspace"
+        style={{ overflow: 'scroll' }}
+        centered
+      >
+        <form action="" method="post" onSubmit={createProject}>
           <TextInput
             data-autofocus
             name="projectName"
@@ -215,8 +239,8 @@ export default function WorkspaceViewNav() {
             required
           />
           <TextInput
-            name="projectDescription" 
-            placeholder="Project description" 
+            name="projectDescription"
+            placeholder="Project description"
             label="Project description"
             withAsterisk
             required
@@ -237,8 +261,6 @@ export default function WorkspaceViewNav() {
             withAsterisk
             required
           />
-          
-    
 
           <Group
             style={{
@@ -267,26 +289,22 @@ export default function WorkspaceViewNav() {
 
       <Navbar.Section grow component={ScrollArea} mx="-xs" px="xs">
         <Group position="apart" spacing="xs" mb="md">
-
-        {projects ? (
-            projects.map((project) => (
-       
-                <NavLink
-                  fz="lg"
-                  color="#868e96"
-                  key={project.id}
-                  label={project.name}
-                  onClick={() => goToProject(project.id)}
-                />
-                // {/* <img src={baseURL + workspace.image} height="400px" alt="dfsgfdsgfd" /> */}
-      
+          {pro_data ? (
+            pro_data.map((project) => (
+              <NavLink
+                fz="lg"
+                color="#868e96"
+                key={project.id}
+                label={project.name}
+                onClick={() => goToProject(project.id)}
+              />
+              // {/* <img src={baseURL + workspace.image} height="400px" alt="dfsgfdsgfd" /> */}
             ))
           ) : (
             <Text color="gray" fz="sm">
               No workspaces yet, hit the plus button to create one.
             </Text>
           )}
-
         </Group>
       </Navbar.Section>
     </Navbar>

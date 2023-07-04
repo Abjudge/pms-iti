@@ -1,5 +1,20 @@
-
-import { Button, Container, createStyles, Group, rem, Text, ScrollArea, Flex, Stack, Center, Title, Modal, TextInput, NativeSelect, NumberInput } from '@mantine/core';
+import {
+  Button,
+  Container,
+  createStyles,
+  Group,
+  rem,
+  Text,
+  ScrollArea,
+  Flex,
+  Stack,
+  Center,
+  Title,
+  Modal,
+  TextInput,
+  NativeSelect,
+  NumberInput,
+} from '@mantine/core';
 import { IconPlayerPlayFilled } from '@tabler/icons-react';
 import { DatePickerInput, DateInput, DateTimePicker } from '@mantine/dates';
 
@@ -19,8 +34,9 @@ const useStyles = createStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     borderRadius: theme.radius.md,
-    border: `${rem(1)} solid ${theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
-      }`,
+    border: `${rem(1)} solid ${
+      theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[2]
+    }`,
     padding: `${theme.spacing.sm} ${theme.spacing.xl}`,
     backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.white,
     marginBottom: theme.spacing.sm,
@@ -47,48 +63,59 @@ interface DndListProps {
 }
 
 export default function ToDo() {
-
-
   const { classes, cx } = useStyles();
   const [opened, { open, close }] = useDisclosure(false);
   const tokens = useSelector((state) => state.TokensSlice.tokens);
-
 
   const params = useParams();
 
   const workspaceID = params.workspaceId;
 
   const { data: workspaceMembers } = useWorkspaceMembers(workspaceID);
-  console.log("in tasks", workspaceMembers);
-  const developers = workspaceMembers?.filter((member) => member.role === "d");
-  const testers = workspaceMembers?.filter((member) => member.role === "t");
-  console.log("in tasks developers", developers);
+  console.log('in tasks', workspaceMembers);
+  const developers = workspaceMembers?.filter((member) => member.role === 'd');
+  const testers = workspaceMembers?.filter((member) => member.role === 't');
+  console.log('in tasks developers', developers);
   const developersEmails = developers?.map((developer) => developer.email);
   const testersEmails = testers?.map((tester) => tester.email);
 
   // get devloper's id by email
 
-
   const projectID = params.projectId;
 
   const addTask = (task) => {
-    return MyAxios.post('task/create/', task, { headers: { Authorization: `JWT ${tokens.access}` } })
-  }
-
+    return MyAxios.post('task/create/', task, {
+      headers: { Authorization: `JWT ${tokens.access}` },
+    });
+  };
 
   const queryClient = useQueryClient();
 
+  function changeStatus(item) {
+    MyAxios.put(`task/${item.id}/start/`, item, {
+      headers: { Authorization: `JWT ${tokens.access}` },
+    }).then((res) => {
+      console.log(res.data);
+      queryClient.invalidateQueries(['toDoTasks']);
+      queryClient.invalidateQueries(['inProgressTasks']);
+    });
+  }
+
+  const { data: tasks } = useToDoTasks(projectID);
+
+  const [state, handlers] = useListState(tasks);
   const createTaskMutation = useMutation(addTask, {
     onSuccess: (newData) => {
-      queryClient.setQueryData(['toDoTasks'],
-        (oldData) => oldData ? [...oldData, newData.data] : [newData.data]
-
+      queryClient.setQueryData(['toDoTasks'], (oldData) =>
+        oldData ? [...oldData, newData.data] : [newData.data]
       );
     },
   });
 
   function createTask(e) {
-    const developerId = developers?.find((developer) => developer.email === e.target.developer.value).user_id;
+    const developerId = developers?.find(
+      (developer) => developer.email === e.target.developer.value
+    ).user_id;
     const testerId = testers?.find((tester) => tester.email === e.target.tester.value).user_id;
     e.preventDefault();
     createTaskMutation.mutate({
@@ -100,40 +127,18 @@ export default function ToDo() {
       developer_id: developerId,
       tester_id: testerId,
       project_id: projectID,
-    },
-    );
+    });
 
     handlers.append({
       id: state.length + 1,
       name: e.target.name.value,
+      description: e.target.description,
       startDate: e.target.startDate.value,
       endDate: e.target.endDate.value,
     });
 
-
-
     close();
   }
-
-
-  function changeStatus(item) {
-    MyAxios.put(`task/${item.id}/start/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((res) => {
-      console.log(res.data);
-      queryClient.invalidateQueries(['toDoTasks']);
-      queryClient.invalidateQueries(['inProgressTasks']);
-
-      
-    });
-  }
-
-  const { data: tasks } = useToDoTasks(projectID);
-
-
-  const [state, handlers] = useListState(tasks);
-
-
-
-
 
   const items = tasks.map((item, index) => (
     <Draggable key={item.id} index={item.id} draggableId={item.name}>
@@ -148,17 +153,23 @@ export default function ToDo() {
             <Stack>
               <Text>{item.name}</Text>
               <Text color="dimmed" size="sm">
-                Start Date: {item.startDate}
+                description: {item.description}
               </Text>
               <Text color="dimmed" size="sm">
-                End Date: {item.endDate}
+                Start Date: {item.start_date}
+              </Text>
+              <Text color="dimmed" size="sm">
+                End Date: {item.end_date}
               </Text>
             </Stack>
             <Group>
-              <Button onClick={() => { changeStatus(item); }}>
+              <Button
+                onClick={() => {
+                  changeStatus(item);
+                }}
+              >
                 Start
               </Button>
-
             </Group>
           </Group>
         </Container>
@@ -166,8 +177,16 @@ export default function ToDo() {
     </Draggable>
   ));
   return (
-    <Stack bg="#3584e4" p={20} sx={{ borderRadius: "5px", boxShadow: '0px 10px 15px 8px rgba(0,0,0,0.1)' }}>
-      <Center><Title order={2} c="White">To Do</Title></Center>
+    <Stack
+      bg="#3584e4"
+      p={20}
+      sx={{ borderRadius: '5px', boxShadow: '0px 10px 15px 8px rgba(0,0,0,0.1)' }}
+    >
+      <Center>
+        <Title order={2} c="White">
+          To Do
+        </Title>
+      </Center>
       <DragDropContext
         onDragEnd={({ destination, source }) =>
           handlers.reorder({ from: source.index, to: destination?.index || 0 })
@@ -254,10 +273,11 @@ export default function ToDo() {
                 </Button>
               </Group>
             </form>
-
           </Modal>
         </ScrollArea>
-        <Button bg="#99c1f1" onClick={open}>Add </Button>
+        <Button bg="#99c1f1" onClick={open}>
+          Add{' '}
+        </Button>
       </DragDropContext>
     </Stack>
   );
