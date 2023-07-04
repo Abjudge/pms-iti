@@ -60,13 +60,13 @@ export default function InProgress() {
 
 
   function changeStatus(item) {
-    MyAxios.put(`task/${item.id}/submit/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((response) => {
-      queryClient.setQueryData(['inProgressTasks'],
-        (oldData) => oldData ? oldData.map((task) => task.id === id ? { ...task, status: newStatus } : task) : [response.data]
-
-      );
+    MyAxios.put(`task/${item.id}/submit/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((res) => {
+      queryClient.invalidateQueries(['inProgressTasks']);
+      queryClient.invalidateQueries(['testingTasks']);
+      
     });
-  }
+    }
+  
 
 
   const {data: tasks} = useInProgressTasks(projectID);

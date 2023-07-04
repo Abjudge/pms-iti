@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
 import { useToggle, upperFirst, useDisclosure } from '@mantine/hooks';
 import { useForm, matchesField } from '@mantine/form';
+import Logo from '../assets/logo.png';
 import {
     TextInput,
     PasswordInput,
@@ -21,6 +22,8 @@ import {
     LoadingOverlay,
     Box,
     Loader,
+    Image,
+   
 } from '@mantine/core';
 import { check } from 'prettier';
 import VerificationEmailSent from './VerificationEmailSent';
@@ -74,18 +77,22 @@ export default function Register() {
 
 
     return (
-
-        <Center w={500} maw={600} h={600} mx="auto">
-
-
+       
+        <Center w={500} maw={600} h={600} mx="auto" >
 
 
 
 
 
-            <Paper sx={{ width: '100%', boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;' }} radius="md" p="xl"  >
+
+            <Paper sx={{ width: '100%', boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;' }} radius="md" p="xl" mt={50}  >
+                <Center mb={30}>
+            <Image src={Logo} width={200} />
+            </Center>
+           
+
                 <Text size="lg" weight={500}>
-                    Register
+                    Register Your Account
                 </Text>
 
 
@@ -171,5 +178,6 @@ export default function Register() {
 
 
         </Center>
+      
     );
 }

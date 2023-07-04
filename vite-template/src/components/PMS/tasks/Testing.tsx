@@ -55,20 +55,16 @@ export default function Testing() {
   console.log("in testinggggggggggggggggggggg", projectID);
 
   function changeToFailed(item) {
-    MyAxios.put(`task/${item.id}/start/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((response) => {
-      queryClient.setQueryData(['testingTasks'],
-        (oldData) => oldData ? oldData.map((task) => task.id === id ? { ...task, status: newStatus } : task) : [response.data]
-
-      );
+    MyAxios.put(`task/${item.id}/start/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((res) => {
+      queryClient.invalidateQueries(['testingTasks']);
+      queryClient.invalidateQueries(['inProgressTasks']);
     });
   }
 
   function changeToDone(item) {
     MyAxios.put(`task/${item.id}/done/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((response) => {
-      queryClient.setQueryData(['testingTasks'],
-        (oldData) => oldData ? oldData.map((task) => task.id === id ? { ...task, status: newStatus } : task) : [response.data]
-
-      );
+      queryClient.invalidateQueries(['testingTasks']);
+      queryClient.invalidateQueries(['doneTasks']);
     });
   }
 

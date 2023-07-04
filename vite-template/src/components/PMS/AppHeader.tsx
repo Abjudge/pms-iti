@@ -2,6 +2,7 @@ import { useEffect, useState, memo } from 'react';
 import { useListState, useDisclosure } from '@mantine/hooks';
 import useWorkspaces from './queries/GetWorkspaces';
 import useProjects from './queries/GetProjects';
+import Logo from '../../assets/logo.png';
 import {
   Header,
   MediaQuery,
@@ -16,6 +17,7 @@ import {
   Text,
   Stack,
   ScrollArea,
+  Image,
 } from '@mantine/core';
 import { MantineLogo } from '@mantine/ds';
 import { IconChevronDown, IconUserCircle, IconLogout2 } from '@tabler/icons-react';
@@ -197,17 +199,9 @@ function AppHeader() {
           height: '100%',
         }}
       >
-        <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
-          <Burger
-            opened={opened}
-            onClick={() => setOpened((o) => !o)}
-            size="sm"
-            color={theme.colors.gray[6]}
-            mr="xl"
-          />
-        </MediaQuery>
+
         <Group>
-          <MantineLogo size={34} />
+          <Image src={Logo} width={150}/>
         </Group>
         <Group>
           <Menu
@@ -281,7 +275,7 @@ function AppHeader() {
                 ))
               ) : (
                 <Text color="gray" fz="sm">
-                  No workspaces yet, hit the plus button to create one.
+                  No projects yet, hit the plus button to create one.
                 </Text>
               )}
 

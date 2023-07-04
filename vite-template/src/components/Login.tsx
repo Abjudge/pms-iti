@@ -11,8 +11,9 @@ import {
   Anchor,
   Stack,
   Center,
+  Image,
 } from '@mantine/core';
-
+import Logo from '../assets/logo.png';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
@@ -107,8 +108,11 @@ export default function Login() {
         radius="md"
         p="xl"
       >
+                      <Center mb={30}>
+            <Image src={Logo} width={200} />
+            </Center>
         <Text size="lg" weight={500}>
-          Login
+          Login To Your Account
         </Text>
 
         <Divider my="lg" />

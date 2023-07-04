@@ -117,11 +117,12 @@ export default function ToDo() {
 
 
   function changeStatus(item) {
-    MyAxios.put(`task/${item.id}/start/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((response) => {
-      queryClient.setQueryData(['toDoTasks'],
-        (oldData) => oldData ? oldData.map((task) => task.id === id ? { ...task, status: newStatus } : task) : [response.data]
+    MyAxios.put(`task/${item.id}/start/`, item, { headers: { Authorization: `JWT ${tokens.access}` } }).then((res) => {
+      console.log(res.data);
+      queryClient.invalidateQueries(['toDoTasks']);
+      queryClient.invalidateQueries(['inProgressTasks']);
 
-      );
+      
     });
   }
 

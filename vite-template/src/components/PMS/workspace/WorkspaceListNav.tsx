@@ -21,8 +21,11 @@ import {
   rem,
   createStyles,
   UnstyledButton,
+  Checkbox,
+  Stack,
 } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
+import { IconBrandGithubFilled } from '@tabler/icons-react';
 
 
 export default function WorkspaceListNav() {
@@ -99,6 +102,7 @@ export default function WorkspaceListNav() {
   }));
   const [opened, setOpened] = useState(false);
   const [openedModal, { open, close }] = useDisclosure(false);
+  const [checked, setChecked] = useState(false);
   // const [workspacesList, setWorkspacesList] = useState([]);
   // const workspaces = useSelector((state) => state.WorkSpacesSlice.workspaces);
   const tokens = useSelector((state) => state.TokensSlice.tokens);
@@ -112,36 +116,40 @@ export default function WorkspaceListNav() {
 
 
 
-// console.log("user", tokens);
+  // console.log("user", tokens);
 
-const addWorkspace = (workspace) => {
-  return MyAxios.post('workspaces/Add', workspace, { headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' }})
-}
+  const addWorkspace = (workspace) => {
+    return MyAxios.post('workspaces/Add', workspace, { headers: { Authorization: `JWT ${tokens.access}`, 'Content-Type': 'multipart/form-data' } })
+  }
 
 
-const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
 
-const createWorkspaceMutation = useMutation(addWorkspace, {
-  onSuccess: (newData) => {
-   queryClient.setQueryData(['workspaces'], 
-   (oldData) => {
-    return oldData ? [...oldData, newData.data] : [newData.data]
-  },
+  const createWorkspaceMutation = useMutation(addWorkspace, {
+    onSuccess: (newData) => {
+      queryClient.setQueryData(['workspaces'],
+        (oldData) => {
+          return oldData ? [...oldData, newData.data] : [newData.data]
+        },
 
-   ); 
-  },
-});
+      );
+    },
+  });
 
- function createWorkspace(e) {
+  function createWorkspace(e) {
+    console.log("cheeeeechvalue", e.target.githubIntegration.value);
     e.preventDefault();
     createWorkspaceMutation.mutate({
-        name: e.target.name.value,
-        description: e.target.description.value,
-        image: e.target.image.files[0],
-        owner_id: user.user_id,
+      name: e.target.name.value,
+      description: e.target.description.value,
+      image: e.target.image.files[0],
+      integrate: e.target.githubIntegration.value,
+      user_name: e.target.githubUsername.value,
+      token: e.target.githubToken.value,
+      owner_id: user.user_id,
     },
     );
-    
+
 
     close();
   }
@@ -170,14 +178,41 @@ const createWorkspaceMutation = useMutation(addWorkspace, {
             placeholder="Workspace description"
             label="Workspace description"
             required
-          ></TextInput>
+          />
           <FileInput
             name="image"
             label="Workspace image"
             accept="image/*"
             placeholder="Workspace image"
             required
-          ></FileInput>
+          />
+          <Stack spacing="xs">
+          <Group mt={20}>
+          <Checkbox
+              name="githubIntegration"
+              label="Integrate with Github?"
+              icon={IconBrandGithubFilled}
+              value={checked}
+              checked={checked}
+              onChange={(event) => setChecked(event.currentTarget.checked)}
+          />
+          </Group>
+          <TextInput
+            name="githubUsername"
+            placeholder="Enter your Github username"
+            label="Your Github username"
+            disabled = {!checked}
+            required = {checked}
+          />
+          <TextInput
+            name="githubToken"
+            placeholder="Enter your Github token"
+            label="Your Github token"
+            disabled = {!checked}
+            required = {checked}
+          />
+          </Stack>
+          
           {/* <input type="file" name="image"></input> */}
           <Group
             style={{
@@ -208,16 +243,16 @@ const createWorkspaceMutation = useMutation(addWorkspace, {
         <Group position="apart" spacing="xs" mb="md">
           {workspaces ? (
             workspaces.map((workspace) => (
-       
-                <NavLink
-                  fz="lg"
-                  color="#868e96"
-                  key={workspace.id}
-                  label={workspace.name}
-                  onClick={() => goToWorkspace(workspace.id)}
-                />
-                // {/* <img src={baseURL + workspace.image} height="400px" alt="dfsgfdsgfd" /> */}
-      
+
+              <NavLink
+                fz="lg"
+                color="#868e96"
+                key={workspace.id}
+                label={workspace.name}
+                onClick={() => goToWorkspace(workspace.id)}
+              />
+              // {/* <img src={baseURL + workspace.image} height="400px" alt="dfsgfdsgfd" /> */}
+
             ))
           ) : (
             <Text color="gray" fz="sm">

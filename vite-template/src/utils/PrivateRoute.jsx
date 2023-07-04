@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Loader, Center } from '@mantine/core';
 
 import Login from '../components/Login';
 
@@ -9,18 +10,15 @@ const PrivateRoute = ({ children }) => {
 
   if (!loggedout) {
     return (
-      <>
+      <Center  h={700} mx="auto">
         {full ? (
           children
         ) : (
-          <h2>
-            <pre>
-              Refreshing your credentials if this page persist check your internet connection and
-              reload the page
-            </pre>
-          </h2>
+          
+          <Loader />
+          
         )}
-      </>
+      </Center>
     );
   } else {
     return <Login />;

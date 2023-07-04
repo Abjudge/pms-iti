@@ -143,13 +143,13 @@ export default function WorkspaceViewNav() {
   
   const createProjectMutation = useMutation(addProject, {
     onSuccess: (newData) => {
-     queryClient.setQueryData(['projects'], 
-     (oldData) => {
-      console.log("oldDataProject", oldData);
-      return oldData ? [...oldData, newData.data] : [newData.data]
-    },
+    //  queryClient.setQueryData(['projects'], 
+    //  (oldData) => {
+    //   console.log("oldDataProject", oldData);
+    //   return oldData ? [...oldData, newData.data] : [newData.data]
+    // },
   
-     ); 
+    //  ); 
     },
   });
   
