@@ -19,13 +19,15 @@ Maintine is a Django/React project that provides a workspace management system. 
 - JSON Web Token
 - Authentication System
 - Djoser
+## Documentation
 
+The project documentation can be found [here](https://docs.google.com/document/d/1YrgRZz3yAWDW0dyUPbPM0LJf8WqbTBbHccDnGkNKPHs/).
 ## Installation
 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/username/maintine.git
+git clone https://github.com/moustafashahin122/ManTeam-Project-Management-System-ITI-Grad-Project
 ```
 
 2. Create a virtual environment and activate it:
@@ -39,7 +41,7 @@ source env/bin/activate
 
 ```bash
 pip install -r requirements.txt
-npm install
+
 ```
 
 4. Create a PostgreSQL database and update the `DATABASES` setting in `maintine/settings.py`:
@@ -67,10 +69,10 @@ python manage.py migrate
 
 ```bash
 python manage.py runserver
-npm start
+npm run dev
 ```
 
-7. Navigate to `http://localhost:3000/` in your browser.
+7. Navigate to `http://localhost:5173/` in your browser.
 
 ## Usage
 
