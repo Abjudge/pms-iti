@@ -1,6 +1,6 @@
 # Manteam - Django/React Project
 
-Manteam is a Django/React project that provides a workspace management system. It allows users to create workspaces, add members to it, and assign roles to them. In each workspace, the owner can create and manage projects, and add tasks to them. The project provides GitHub integration, which automatically creates a new repository when creating a new project and creates a new branch when adding a new task to the project.
+Manteam is Project Management System built with Django/React. It allows users to create workspaces, add members to it, and assign roles to them. In each workspace, the owner can create and manage projects, and add tasks to them. The project provides GitHub integration, which automatically creates a new repository when creating a new project and creates a new branch when adding a new task to the project.
 
 ## Technologies Used
 
