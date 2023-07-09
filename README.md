@@ -1,6 +1,6 @@
-# Maintine - Django/React Project
+# Manteam - Django/React Project
 
-Maintine is a Django/React project that provides a workspace management system. It allows users to create workspaces, add members to it, and assign roles to them. In each workspace, the owner can create and manage projects, and add tasks to them. The project provides GitHub integration, which automatically creates a new repository when creating a new project and creates a new branch when adding a new task to the project.
+Manteam is a Django/React project that provides a workspace management system. It allows users to create workspaces, add members to it, and assign roles to them. In each workspace, the owner can create and manage projects, and add tasks to them. The project provides GitHub integration, which automatically creates a new repository when creating a new project and creates a new branch when adding a new task to the project.
 
 ## Technologies Used
 
@@ -44,7 +44,7 @@ pip install -r requirements.txt
 
 ```
 
-4. Create a PostgreSQL database and update the `DATABASES` setting in `maintine/settings.py`:
+4. Create a PostgreSQL database and update the `DATABASES` setting in `pms/settings.py`:
 
 ```python
 DATABASES = {
